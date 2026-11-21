@@ -3,16 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>AI Ofis TZ</title>
+<title>AI Ofis</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;700;800&display=swap" rel="stylesheet">
 <style>
-/* VOICE work: texnik topshiriq + jonli mahsulot namunasi
-   IDEA yuqoridan ko'rinadigan ofis rejasi (arxitektor chizmasi) jonlanadi
-   PICTURE 8 kabinetli ofis, agentlar yuradi, ishlaydi, uxlaydi, bahslashadi
-   COLOUR oq qog'oz, parket, qora devor, har agentning o'z rangi, aksent qizil-olov
+/* VOICE ishchi panel: jonli ofis, vazifa berish, natijalar
+   IDEA yuqoridan ko'rinadigan ofis, agentlar jonli ishlaydi
+   PICTURE 8 kabinetli 2D ofis, birinchi ekranning asosiy qismi
+   COLOUR oq, parket, qora devor, har agentning rangi, aksent qizil-olov
    TYPE Onest 800 + Onest
-   LAYOUT ofis chapda, boshqaruv o'ngda; telefonda: sarlavha, ofis, boshqaruv */
+   LAYOUT ofis chapda, boshqaruv o'ngda; telefonda: ofis, vazifa, holat */
 :root{color-scheme:light dark;--bg:light-dark(#ffffff,#121110);--ink:light-dark(#1d1a17,#efe9e1);--mut:light-dark(#6a625a,#a99f94);--line:light-dark(#e6e0d8,#2c2825);--card:light-dark(#faf7f3,#1b1917);--acc:#e4572e;--floor:light-dark(#e8d9c0,#3a3027);--plank:light-dark(#dcc9aa,#332a22);--corr:light-dark(#d9e2dc,#262b29);--wall:light-dark(#2b2622,#050505);--desk:light-dark(#a9784f,#6b4a30);--sofa:light-dark(#5b6b8c,#3c4760);--tile:light-dark(#cfd9d2,#222725);--wtop:light-dark(#f3ead9,#2d2823);--wbot:light-dark(#e6d9c1,#25201c);--base:light-dark(#b9a17f,#17130f);--dtop:light-dark(#c8925f,#7a5638);--chair:light-dark(#3b4252,#20242c)}
 :root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
 *{box-sizing:border-box;min-width:0}
@@ -190,245 +190,100 @@ button:hover{filter:brightness(1.08)}
 .log .ap{display:flex;gap:6px;margin-top:6px}
 .log .ap button{min-height:36px;font-size:13px}
 .note{font-size:13px;color:var(--mut);margin-top:10px}
-.alt{background:var(--card);border-block:1px solid var(--line)}
-.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px}
-.team{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-.ac{background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:16px;scroll-margin-top:80px}
-.ac.hl{outline:3px solid var(--c)}
-.ac header{display:flex;gap:10px;align-items:center;margin-bottom:8px}
-.ac header svg{width:44px;height:58px;flex:none}
-.ac header small{display:block;color:var(--mut);font-size:14px}
-.ac ul{margin:0 0 10px;padding-left:18px}
-.ac li{margin-bottom:3px}
-.lab{font-size:13px;font-weight:700;color:var(--mut);margin:8px 0 4px}
-.tools{display:flex;flex-wrap:wrap;gap:6px}
-.tools span{font-size:13px;border:1px solid var(--line);border-radius:8px;padding:2px 8px;white-space:nowrap}
-.tools b{color:var(--c)}
-.flow{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;align-items:stretch}
-.st{background:var(--bg);border:2px solid var(--ink);border-radius:12px;padding:12px;position:relative}
-.st b{display:block;font-size:16px}
-.st span{font-size:14px;color:var(--mut)}
-.st:not(:last-child)::after{content:"";position:absolute;right:-12px;top:50%;width:12px;height:2px;background:var(--ink)}
-.bus{margin-top:10px;background:var(--wall);color:#f4eee6;border-radius:12px;padding:10px 14px;font-size:14px}
-table{border-collapse:collapse;width:100%;font-size:15px}
-th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
-th{font-size:13px;color:var(--mut);font-weight:700}
-td.n{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
-pre{background:var(--wall);color:#efe9e1;border-radius:12px;padding:16px;font-size:13.5px;line-height:1.5;margin:0;overflow-x:auto}
-.cp{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-.cp button{min-height:36px;font-size:13px}
-.steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
-.ph{border-top:6px solid var(--acc);background:var(--bg);border-radius:0 0 12px 12px;padding:14px;border-inline:1px solid var(--line);border-bottom:1px solid var(--line)}
-.ph:nth-child(2){border-top-color:#2e8b57}.ph:nth-child(3){border-top-color:#0aa5b0}.ph:nth-child(4){border-top-color:#d6127e}
-.ph b{font-size:22px;display:block}
-.ph small{color:var(--mut);font-size:14px}
-.ph ul{padding-left:18px;margin:8px 0 0}
-.chk{list-style:none;padding:0;margin:0;display:grid;gap:8px}
-.chk li{padding-left:30px;position:relative}
-.chk li::before{content:"";position:absolute;left:0;top:3px;width:18px;height:18px;border:2px solid var(--ink);border-radius:5px}
-.warn{display:grid;grid-template-columns:repeat(auto-fit,minmax(15em,1fr));gap:14px}
-.warn div{border-left:4px solid #e02020;padding:4px 0 4px 12px}
-.warn b{display:block}
-footer{background:var(--wall);color:#d9d1c6;font-size:14px}
-footer b{color:#fff}
+
+.top .wrap{justify-content:space-between}
+.tabs{display:flex;gap:4px}
+.tabs a{text-decoration:none;padding:8px 14px;border-radius:9px;font-weight:700;font-size:15px;color:#d9d1c6;display:flex;gap:8px;align-items:center;min-height:40px}
+.tabs a.cur{background:#ffffff1f;color:#fff}
+.tabs a:focus-visible{outline:3px solid var(--acc)}
+.nb{background:var(--acc);color:#fff;border-radius:10px;font-size:12px;padding:0 7px;line-height:20px}
+.live{display:flex;gap:8px;align-items:center;font-size:14px;color:#d9d1c6;white-space:nowrap}
+.live i{width:9px;height:9px;border-radius:50%;background:#3ddc84;box-shadow:0 0 0 0 #3ddc8488;animation:pulse 1.6s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 8px #3ddc8400}}
+.vh{display:flex;justify-content:space-between;align-items:end;gap:16px;flex-wrap:wrap;margin-bottom:16px}
+.vh h1{font-size:clamp(28px,3.4vw,40px)}
+.vh p{margin:0;color:var(--mut)}
+.band.tight{padding-top:clamp(18px,2.4vw,32px)}
+#ask{border-color:#ffc400;background:light-dark(#fff8dc,#2e2706)}
+.aq{display:grid;gap:8px;font-size:14px;padding:8px 0;border-bottom:1px solid var(--line)}
+.aq:last-child{border:0}
+.aq button{min-height:38px;font-size:14px}
+.staff{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px}
+.sf{display:grid;grid-template-columns:84px minmax(0,1fr);gap:12px;background:var(--bg);border:1px solid var(--line);border-radius:16px;padding:14px;scroll-margin-top:80px;transition:outline-color .3s}
+.sf.hl{outline:3px solid var(--c)}
+.sfp{align-self:start;height:120px;background:color-mix(in srgb,var(--c) 16%,transparent);border-radius:12px;display:grid;place-items:center;padding:8px 0}
+.sfp svg{width:60px;height:80px}
+.cat-p svg{width:64px;height:44px}
+.sf small{color:var(--mut);font-size:14px}
+.sf dl{margin:6px 0 0;font-size:14px}
+.sf dt{color:var(--mut);font-size:13px;margin-top:6px}
+.sf dd{margin:0}
+.pfigs{display:flex;gap:clamp(14px,3vw,28px)}
+.pfigs div{border-top:3px solid var(--ink);padding-top:6px;min-width:5.5em}
+.pfigs b{display:block;font-size:34px;line-height:1}
+.pfigs span{font-size:14px;color:var(--mut)}
+.pcols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;align-items:start}
+.pcols h2{font-size:22px;margin-bottom:10px}
+.plist{display:grid;gap:10px}
+.pj{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:12px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+.pj b{display:block;font-size:15px;line-height:1.35}
+.pj small{display:block;color:var(--mut);font-size:13px;margin-top:2px}
+.pj.off{opacity:.6}
+.mini{width:44px;height:52px;border-radius:10px;background:color-mix(in srgb,var(--c) 16%,transparent);display:grid;place-items:center;overflow:hidden}
+.mini svg{width:40px;height:54px;margin-top:6px}
+.bar{height:6px;border-radius:3px;background:var(--line);margin-top:8px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--c);border-radius:3px;transition:width .4s}
+.pc{font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap}
+.rd button{min-height:40px;font-size:14px;white-space:nowrap}
+.empty{color:var(--mut);background:var(--card);border:1px dashed var(--line);border-radius:14px;padding:18px;margin:0;max-width:none}
+.toast{position:fixed;left:50%;bottom:20px;transform:translate(-50%,30px);opacity:0;background:var(--wall);color:#fff;border-radius:12px;padding:12px 16px;font-size:15px;z-index:60;transition:.3s;max-width:min(92vw,520px);pointer-events:none}
+.toast.show{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+.toast a{color:#ffb39c;font-weight:700;margin-left:6px}
 @media(max-width:1100px){.stage{grid-template-columns:minmax(0,1fr)}.side{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:900px){.head,.two{grid-template-columns:minmax(0,1fr)}.team{grid-template-columns:minmax(0,1fr)}.flow{grid-template-columns:minmax(0,1fr)}.st:not(:last-child)::after{right:50%;top:auto;bottom:-12px;width:2px;height:12px}.steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:600px){.side{grid-template-columns:minmax(0,1fr)}.figs{grid-template-columns:repeat(2,minmax(0,1fr))}.steps{grid-template-columns:minmax(0,1fr)}table{font-size:13px}th,td{padding:6px 4px}.stack thead{display:none}.stack tr{display:grid;padding-block:10px;border-bottom:1px solid var(--line)}.stack td{display:flex;justify-content:space-between;gap:12px;border:0;padding:3px 0;text-align:right}.stack td::before{content:attr(data-l);font-weight:700;color:var(--mut);text-align:left}}
-@media(prefers-reduced-motion:reduce){.ag,.ov,.cat{transition:none!important}.world *{animation:none!important}}
+@media(max-width:800px){.pcols{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:600px){.side{grid-template-columns:minmax(0,1fr)}.live span{display:none}.pj{grid-template-columns:44px minmax(0,1fr)}.rd button,.pc{grid-column:2;justify-self:start}}
+@media(prefers-reduced-motion:reduce){.ag,.ov,.cat{transition:none!important}.world *,.live i{animation:none!important}}
 </style>
 </head>
 <body>
-<nav class="top"><div class="wrap"><span class="logo">AI <b>Ofis</b></span><div class="scroll">
-<a href="#ofis">Ofis</a><a href="#maqsad">Maqsad</a><a href="#jamoa">Jamoa</a><a href="#arxitektura">Arxitektura</a><a href="#holatlar">Holatlar</a><a href="#skilllar">Skill'lar</a><a href="#repo">Repo</a><a href="#xavfsizlik">Xavfsizlik</a><a href="#bosqichlar">Bosqichlar</a><a href="#mezonlar">Qabul mezonlari</a><a href="#cheklovlar">Cheklovlar</a></div></div></nav>
+<nav class="top"><div class="wrap"><span class="logo">AI <b>Ofis</b></span><div class="tabs"><a href="#ofis" class="cur">Ofis</a><a href="#loyihalar">Loyihalar <span class="nb" id="nb" hidden>0</span></a></div><span class="live"><i></i><span>8 agent onlayn</span></span></div></nav>
 
-<section class="band" id="ofis"><div class="wrap">
-<div class="head">
-<div><h1>AI Ofis: 8 ta agentdan iborat o'z ishchi jamoamiz</h1></div>
-<div><p>To'liq texnik topshiriq (TZ) va jonli ofis ekranining ishlaydigan namunasi. Vazifa bering: Rais uni mutaxassisga topshiradi, siz esa kim ishlayotgani, kim dam olayotgani va kim asabiylashib yordam so'rayotganini kuzatasiz.</p></div>
-</div>
+<main id="v-ofis">
+<section class="band tight"><div class="wrap">
 <div class="stage">
 <div>
 <div class="ow" id="ow"><div id="sizer"><div class="world" id="world"></div></div></div>
-<p class="note">Ofisdagi harakatlar namuna simulyatsiya: haqiqiy agentlar 1-bosqichda ulanadi. Agentni bossangiz, uning TZ kartasiga o'tasiz. Kun va tun kompyuteringiz soatiga qarab almashadi; mushukni bosib ko'ring.</p>
+<p class="note">Namuna rejim: agentlar hali haqiqiy ishga ulanmagan.</p>
 </div>
 <div class="side">
 <div class="box"><h3>Vazifa berish</h3>
-<form id="f"><input type="text" id="task" placeholder="Masalan: 8 slaydli prezentatsiya tayyorla" autocomplete="off"><button type="submit">Ber</button></form>
+<form id="f"><input type="text" id="task" placeholder="Masalan: 8 slaydli prezentatsiya tayyorla" autocomplete="off" aria-label="Vazifa matni"><button type="submit">Ber</button></form>
 <div class="chips" id="chips"></div></div>
-<div class="box"><div class="cnt" id="cnt"></div>
-<div class="ctl" style="margin-top:10px"><button class="gh" id="pause" type="button">Pauza</button><button class="gh" id="speed" type="button">Tezlik ×1</button><button class="gh" id="tm" type="button">Vaqt: avto</button></div></div>
-<div class="box"><h3>Jamoa holati</h3><div class="rows" id="rows"></div></div>
-<div class="box"><h3>Jurnal</h3><ul class="log" id="log"></ul></div>
+<div class="box" id="ask" hidden><h3>Ruxsat so'rovlari <span class="nb" id="nq" hidden>0</span></h3><div id="askl"></div></div>
+<div class="box"><h3>Hozir onlayn</h3><div class="cnt" id="cnt"></div><div class="rows" id="rows" style="margin-top:8px"></div>
+<div class="ctl" style="margin-top:12px"><button class="gh" id="pause" type="button">Pauza</button><button class="gh" id="speed" type="button">Tezlik ×1</button><button class="gh" id="tm" type="button">Vaqt: avto</button></div></div>
 </div>
 </div>
 </div></section>
-
-<section class="band alt" id="maqsad"><div class="wrap two">
-<div><h2>Maqsad: bitta repoda yig'ilgan raqamli ofis</h2>
-<p>Bitta GitHub reposida 8 ta AI agentdan iborat jamoa quriladi. Siz vazifani oddiy o'zbek tilida berasiz: ofis sayti, Telegram yoki ovoz orqali ("Jarvis, ..."). Rais vazifani tushunadi, kerak bo'lsa qismlarga bo'ladi va mutaxassisga topshiradi. Tayyor natija Tekshiruvchidan o'tib, sizga qaytadi.</p>
-<p>Har bir agentning holati hodisalar oqimi orqali ofis ekraniga yuboriladi. Shuning uchun ekran bezak emas, balki haqiqiy nazorat paneli: qaysi agent band, qaysi biri ruxsatingizni kutyapti, qayerda xato chiqdi, bir qarashda ko'rinadi.</p></div>
-<div><h3 style="margin-bottom:10px">Asosiy talablar</h3>
-<ul class="chk">
-<li>Vazifa o'zbek, rus yoki ingliz tilida qabul qilinadi, javob shu tilda qaytadi.</li>
-<li>Har bir agent alohida papka: prompt, skill'lar, ruxsatlar va testlar bilan.</li>
-<li>Qaytarib bo'lmaydigan har qanday amal faqat sizning "Ha" javobingizdan keyin bajariladi.</li>
-<li>Ofis ekrani har bir holat o'zgarishini 1 soniya ichida ko'rsatadi.</li>
-<li>Asosiy ish Vivobook'da lokal; og'ir generatsiya bulut API orqali.</li>
-<li>Barcha harakatlar jurnalga yoziladi: kim, qachon, nima qildi, natija.</li>
-</ul></div>
+<section class="band alt"><div class="wrap">
+<div class="vh"><h2 style="margin:0">Xodimlar ro'yxati</h2><p>Shunchaki qiziqish uchun.</p></div>
+<div class="staff" id="staff"></div>
 </div></section>
+</main>
 
-<section class="band" id="jamoa"><div class="wrap">
-<h2>Jamoa: 8 ta agent, har biri o'z kabinetida</h2>
-<p style="color:var(--mut)">Yulduzlar soni 2026-yil 21-noyabr holatiga, GitHub qidiruvidan olindi.</p>
-<div class="team" id="team"></div>
-</div></section>
-
-<section class="band alt" id="arxitektura"><div class="wrap">
-<h2>Arxitektura: vazifa qanday yo'l bosadi</h2>
-<div class="flow">
-<div class="st"><b>Siz</b><span>Ofis sayti, Telegram bot yoki ovoz</span></div>
-<div class="st"><b>Rais</b><span>Tushunadi, bo'ladi, navbatga qo'yadi</span></div>
-<div class="st"><b>Mutaxassis agent</b><span>Skill'lar va MCP vositalari bilan bajaradi</span></div>
-<div class="st"><b>Tekshiruvchi</b><span>Sifatni tekshiradi, 2 martagacha qaytaradi</span></div>
-<div class="st"><b>Natija</b><span>Fayl, havola yoki hisobot sizga</span></div>
-</div>
-<div class="bus">Hodisalar oqimi: har bir agent holatini (ishlayapti, asabiy, uxlayapti...) yuboradi → WebSocket → ofis ekrani va Telegram bildirishnomalari</div>
-<div class="two" style="margin-top:24px">
-<div><h3 style="margin-bottom:8px">Texnologiyalar</h3>
-<table class="stack"><thead><tr><th>Qism</th><th>Tanlov</th></tr></thead><tbody>
-<tr><td data-l="Qism">Backend</td><td data-l="Tanlov">Python 3.11, FastAPI, WebSocket</td></tr>
-<tr><td data-l="Qism">Asosiy model</td><td data-l="Tanlov">Claude API; yengil ishlar uchun Ollama (lokal)</td></tr>
-<tr><td data-l="Qism">Orkestratsiya</td><td data-l="Tanlov">Claude Agent SDK yoki openai-agents-python</td></tr>
-<tr><td data-l="Qism">Vositalar</td><td data-l="Tanlov">MCP serverlar (GitHub, Windows, FFmpeg, ComfyUI)</td></tr>
-<tr><td data-l="Qism">Navbat va xotira</td><td data-l="Tanlov">SQLite (keyin Redis), vektor qidiruv</td></tr>
-<tr><td data-l="Qism">Ofis ekrani</td><td data-l="Tanlov">React + PixiJS, 2D animatsion personajlar</td></tr>
-<tr><td data-l="Qism">Ovoz</td><td data-l="Tanlov">Whisper (nutq → matn), TTS (matn → nutq)</td></tr>
-<tr><td data-l="Qism">Video</td><td data-l="Tanlov">FFmpeg, Remotion, PySceneDetect</td></tr>
-</tbody></table></div>
-<div><h3 style="margin-bottom:8px">Hodisa namunasi</h3>
-<div class="cp"><span style="font-size:14px;color:var(--mut)">Har bir agent shu formatda xabar yuboradi</span><button class="gh" type="button" data-copy="ev">Nusxa olish</button></div>
-<pre id="ev">{
-  "agent": "montajchi",
-  "state": "blocked",
-  "task_id": "t-0142",
-  "task": "Reels uslubida yangi klip",
-  "progress": 45,
-  "message": "Bu kadrga fon yo'q, Rassomdan so'rayapman",
-  "ask": "rassom",
-  "ts": "2026-11-21T16:40:12+05:00"
-}</pre></div>
+<main id="v-loyihalar" hidden>
+<section class="band tight"><div class="wrap">
+<div class="vh"><div><h1>Loyihalar</h1><p>Bajarilayotgan va tayyor vazifalar. Tayyorini shu yerdan yuklab olasiz.</p></div>
+<div class="pfigs"><div><b id="na">0</b><span>bajarilyapti</span></div><div><b id="nr">0</b><span>tayyor</span></div><div><b id="nt">0</b><span>jami</span></div></div></div>
+<div class="pcols">
+<div><h2>Bajarilyapti</h2><div class="plist" id="act"></div></div>
+<div><h2>Tayyor</h2><div class="plist" id="rdy"></div><p class="note">Hozircha natija namuna .md fayl sifatida yuklanadi; agentlar ulangach haqiqiy fayl bo'ladi.</p></div>
 </div>
 </div></section>
-
-<section class="band" id="holatlar"><div class="wrap">
-<h2>Agent holatlari va ofisda ko'rinishi</h2>
-<div class="scroll" style="display:block"><table class="stack"><thead><tr><th>Holat</th><th>Qachon</th><th>Ofisda nima ko'rinadi</th><th>Hodisa</th></tr></thead><tbody id="states"></tbody></table></div>
-</div></section>
-
-<section class="band alt" id="skilllar"><div class="wrap">
-<h2>Skill'lar va vositalar: nimani o'rnatamiz</h2>
-<p>Har bir vosita o'rnatilishidan oldin Qo'riqchi tekshiruvidan o'tadi va versiyasi qotiriladi. Begona skill ichidagi buyruqlar avtomatik bajarilmaydi.</p>
-<div class="scroll" style="display:block"><table class="stack"><thead><tr><th>Repo</th><th style="text-align:right">Yulduz</th><th>Kim ishlatadi</th><th>Nima uchun</th></tr></thead><tbody id="sk"></tbody></table></div>
-<h3 style="margin:24px 0 8px">Ofis ekrani uchun ilhom manbalari</h3>
-<div class="tools" id="insp"></div>
-</div></section>
-
-<section class="band" id="repo"><div class="wrap two">
-<div><div class="cp"><h2 style="margin:0">Repo tuzilmasi</h2><button class="gh" type="button" data-copy="tree">Nusxa olish</button></div>
-<pre id="tree">ai-ofis/
-├─ README.md
-├─ .env.example          # API kalitlar shabloni (.env gitga tushmaydi)
-├─ office-ui/            # jonli ofis sayti (React + PixiJS)
-│  ├─ src/scene/         # xonalar, mebel, personajlar
-│  └─ src/state/         # WebSocket hodisalari
-├─ core/
-│  ├─ orchestrator/      # Rais: marshrut, navbat, reja
-│  ├─ events/            # hodisalar oqimi → WebSocket
-│  ├─ memory/            # umumiy xotira (SQLite)
-│  └─ permissions/       # ruxsatlar va "Ha/Yo'q" so'rovlari
-├─ agents/
-│  ├─ rais/   hujjatchi/   tadqiqotchi/   rassom/
-│  ├─ montajchi/   jarvis/   qoriqchi/   tekshiruvchi/
-│  │   └─ har birida: agent.yaml, prompt.md, skills/, tests/
-├─ skills/               # tashqi skill'lar (tekshiruvdan keyin)
-├─ mcp/                  # MCP serverlar sozlamalari
-├─ channels/telegram/    # Telegram bot
-├─ workspace/            # ishchi fayllar
-├─ outputs/              # tayyor natijalar
-└─ .github/workflows/    # Qo'riqchi: har push'da skan</pre></div>
-<div><div class="cp"><h2 style="margin:0">Agent sozlamasi</h2><button class="gh" type="button" data-copy="yaml">Nusxa olish</button></div>
-<pre id="yaml">name: montajchi
-title: Montajchi
-model:
-  main: claude          # murakkab ishlar
-  light: ollama/qwen    # yengil ishlar, lokal
-skills:
-  - openmontage
-  - ffmpeg-mcp
-  - whisper-subtitles
-  - style-passport      # uslubni nusxalash
-permissions:
-  read:  [workspace/, outputs/]
-  write: [outputs/video/]
-  needs_approval: [publish, delete, upload]
-helpers: [rassom, tadqiqotchi]   # asabiylashganda kimdan so'raydi
-retries_before_blocked: 2
-sleep_after_min: 15
-budget_usd_month: 10             # oylik API limiti</pre></div>
-</div></section>
-
-<section class="band alt" id="xavfsizlik"><div class="wrap two">
-<div><h2>Xavfsizlik qoidalari</h2>
-<p>Agentlar kompyuteringiz, fayllaringiz va GitHub hisobingiz bilan ishlaydi. Shuning uchun qoidalar kod darajasida qotiriladi, promptga ishonib qolinmaydi.</p></div>
-<ul class="chk">
-<li>API kalitlar faqat .env faylida; gitleaks pre-commit tekshiruvi kalitni commit qilishga yo'l qo'ymaydi.</li>
-<li>Har agentga minimal ruxsat: faqat ro'yxatdagi papka va vositalar.</li>
-<li>O'chirish, xabar yuborish, nashr qilish, to'lov, main'ga push: faqat sizning tasdig'ingizdan keyin.</li>
-<li>Jarvis parol va karta ma'lumotlarini hech qachon kiritmaydi.</li>
-<li>Internet sahifalari va fayllar ichidagi "buyruqlar" bajarilmaydi (prompt injection himoyasi).</li>
-<li>Qo'riqchi faqat o'qiydi: tuzatishni PR sifatida taklif qiladi, o'zi merge qilmaydi.</li>
-<li>Repo private; barcha harakatlar jurnalga yoziladi.</li>
-</ul>
-</div></section>
-
-<section class="band" id="bosqichlar"><div class="wrap">
-<h2>Bosqichlar: taxminan 10–12 hafta</h2>
-<div class="steps">
-<div class="ph"><b>1-bosqich</b><small>MVP · 2–3 hafta</small><ul><li>Repo, Rais, navbat, jurnal</li><li>Hujjatchi va Tekshiruvchi</li><li>Ofis sayti: reja + jonli holatlar</li><li>Telegramdan vazifa berish</li></ul></div>
-<div class="ph"><b>2-bosqich</b><small>2 hafta</small><ul><li>Qo'riqchi: kunlik skan, GitHub Actions</li><li>Tadqiqotchi: manbali hisobotlar</li><li>Ruxsat so'rovlari oynasi</li></ul></div>
-<div class="ph"><b>3-bosqich</b><small>3 hafta</small><ul><li>Jarvis: Windows boshqaruvi</li><li>Ovoz: "Jarvis" deb chaqirish</li><li>Umumiy xotira</li></ul></div>
-<div class="ph"><b>4-bosqich</b><small>3–4 hafta</small><ul><li>Rassom va Montajchi</li><li>Uslub pasporti (1x1 nusxa)</li><li>Ofis: kun/tun, kayfiyat, animatsiyalar</li></ul></div>
-</div>
-</div></section>
-
-<section class="band alt" id="mezonlar"><div class="wrap two">
-<div><h2>Qabul mezonlari: ish qachon "tayyor" hisoblanadi</h2><p>Har bir bosqich oxirida shu ro'yxat bo'yicha qo'lda sinov o'tkaziladi.</p></div>
-<ul class="chk">
-<li>"8 slaydli prezentatsiya" buyrug'i 5 daqiqa ichida ochiladigan .pptx qaytaradi.</li>
-<li>Agent holati ofis ekranida 1 soniya ichida yangilanadi.</li>
-<li>Qo'riqchi test repoga ataylab qo'yilgan soxta kalitni topadi va Telegramga xabar beradi.</li>
-<li>Jarvis "Yuklamalar papkasini tartibla" buyrug'ini hech narsani o'chirmasdan bajaradi.</li>
-<li>O'chirish so'ralganda tasdiq chiqadi; "Yo'q" bosilsa hech narsa o'zgarmaydi.</li>
-<li>Montajchi 30 soniyalik namuna reels'dan uslub pasporti tuzadi va yangi klipni shu ritm va subtitr uslubida yig'adi.</li>
-<li>Tekshiruvchi buzilgan faylni sizga yubormasdan agentga qaytaradi.</li>
-</ul>
-</div></section>
-
-<section class="band" id="cheklovlar"><div class="wrap">
-<h2>Halol cheklovlar</h2>
-<div class="warn">
-<div><b>Vivobook kuchi</b>Kuchli videokarta bo'lmasa, rasm va video generatsiya hamda katta lokal modellar sekin. Og'ir ishlar bulut API orqali bajariladi.</div>
-<div><b>"1x1" uslub</b>Kesim ritmi, subtitr, rang va o'tishlarni nusxalash real. Murakkab maxsus effektlar har doim avtomatik chiqmaydi: Montajchi qoralama beradi, siz tuzatish aytasiz.</div>
-<div><b>O'zbek ovozi</b>Whisper o'zbekchani tushunadi, lekin aniqligi rus va ingliz tilidan pastroq. Yaxshi mikrofon va jim xona kerak.</div>
-<div><b>Xarajat</b>Claude, rasm va video API'lari pullik. Har agentga oylik limit qo'yiladi va ofisda ko'rsatiladi.</div>
-<div><b>Mualliflik huquqi</b>Boshqa videoning uslubini o'rganish mumkin, uning musiqasi va kadrlarini ruxsatsiz qayta ishlatib bo'lmaydi.</div>
-</div>
-</div></section>
-
-<footer class="band"><div class="wrap"><b>AI Ofis</b> · Texnik topshiriq, 1-versiya, 2026-yil 21-noyabr. Keyingi qadam: TZ tasdiqlangach, GitHub'da repo ochiladi va 1-bosqich boshlanadi.</div></footer>
-
+</main>
+<div class="toast" id="toast" role="status"></div>
 <script>
+
 {
 const AG=[
 {id:"rais",n:"Rais",r:"Bosh menejer (orkestrator)",c:"#e4572e",h:"#3b2a20",cab:0,
@@ -547,7 +402,7 @@ const ovl=document.getElementById("ovl");
 const SP={coffee:[[64,338],[106,318],[228,344],[256,302]],meet:[[430,300],[500,300],[570,300],[430,394],[500,396],[570,394]],couch:[[797,354],[853,354],[909,354]]};
 const spots={};for(const k in SP)spots[k]=SP[k].map(p=>({x:p[0],y:p[1],cab:null,pos:null,by:null}));
 AG.forEach((a,i)=>{const e=document.createElement("div");e.className="ag";e.style.setProperty("--c",a.c);e.innerHTML=sprite(a);
- e.addEventListener("click",()=>{const c=document.getElementById("a-"+a.id);if(c){c.scrollIntoView({behavior:"smooth"});c.classList.add("hl");setTimeout(()=>c.classList.remove("hl"),2200)}});
+ e.addEventListener("click",()=>{const c=document.getElementById("x-"+a.id);if(c){c.scrollIntoView({behavior:"smooth"});c.classList.add("hl");setTimeout(()=>c.classList.remove("hl"),2200)}});
  const o=document.createElement("div");o.className="ov";o.style.setProperty("--c",a.c);
  o.innerHTML=`<div class="pb"><i></i></div><div class="th"><i></i><i></i><i></i></div><div class="pf"><i></i><i></i></div><span class="z">z Z z</span><div class="nm">${a.n}</div><div class="emo"></div><div class="bub"></div>`;
  world.insertBefore(e,ovl);ovl.appendChild(o);
@@ -591,43 +446,77 @@ const rows=document.getElementById("rows"),cnt=document.getElementById("cnt");
 function panel(){rows.innerHTML=AG.map(a=>`<div class="row"><span class="dot" style="background:${a.c}"></span><div><b>${a.n}</b><small>${a.task?esc(a.task):a.r}</small>${a.task?`<div style="height:4px;background:var(--line);border-radius:2px;margin-top:3px"><div id="pr-${a.id}" style="height:4px;border-radius:2px;background:${a.c};width:${a.p}%"></div></div>`:""}</div><span class="chip c-${a.st}">${SL[a.st]}</span></div>`).join("");
  const n=s=>AG.filter(a=>a.st===s).length;
  cnt.innerHTML=`<span><b>${n("ishlayapti")+n("asabiy")+n("ruxsat")}</b> ishlayapti</span><span><b>${n("gaplashyapti")}</b> gaplashyapti</span><span><b>${n("dam")}</b> dam olyapti</span><span><b>${n("uxlayapti")}</b> uxlayapti</span>`}
-const logEl=document.getElementById("log");
-function log(h){const li=document.createElement("li");const d=new Date();li.innerHTML=`<time>${d.toTimeString().slice(0,8)}</time>${h}`;logEl.prepend(li);return li}
+function log(){}
 const tag=a=>`<b style="color:${a.c}">${a.n}</b>`;
 const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const RT=[["montajchi",/video|montaj|reels|klip|subtitr|rolik|shorts/i],["rassom",/rasm|logo|fon|dizayn|poster|banner|foto|surat/i],["qoriqchi",/github|repo|xavfsiz|kalit|token|zaif|parol/i],["jarvis",/kompyuter|papka|ilova|brauzer|och|yoq|tartib|o'chir|skrinshot/i],["hujjatchi",/prezent|slayd|word|doc|hujjat|matn|xat|excel|jadval|hisobot|pdf|tarjima/i],["tadqiqotchi",/izla|qidir|tadqiq|tahlil|narx|raqobat|bozor|trend/i]];
 const pick=t=>(RT.find(r=>r[1].test(t))||["tadqiqotchi"])[0];
 const HELP={hujjatchi:["tadqiqotchi","Raqamlar qayerda?! Menga so'nggi hisobot kerak!","Mana, 3 ta manba bilan."],montajchi:["rassom","Bu kadrga fon yo'q-ku! Yordam ber!","Hozir chizib beraman."],rassom:["tadqiqotchi","Brendning ranglari qanaqa edi?!","Qizil va oq, logotip papkada."],jarvis:["qoriqchi","Bu faylni o'chirsam xavfsizmi?","Avval egasidan ruxsat so'ra!"],qoriqchi:["rais","Repoda ochiq kalit topdim! Nima qilay?","Darhol egasiga xabar ber, PR och."],tadqiqotchi:["hujjatchi","Topganlarimni qaysi formatda beray?!","Jadval qilib ber, raqamlari bilan."]};
+let PID=0;const PR=[];const DONE={};AG.forEach(a=>DONE[a.id]=0);
+try{JSON.parse(localStorage.getItem("aiofis-pr")||"[]").forEach(p=>{PR.push(p);PID=Math.max(PID,p.id);if(p.st==="tayyor"&&DONE[p.ag]!==undefined)DONE[p.ag]++})}catch(e){}
+function save(){try{localStorage.setItem("aiofis-pr",JSON.stringify(PR.filter(p=>p.st==="tayyor"||p.st==="bekor").slice(0,40)))}catch(e){}}
 async function runTask(text){
  const id=pick(text),a=M[id],rais=M.rais;
- log(`Siz → ${tag(rais)}: “${esc(text)}”`);emo(rais,"bang");
- setSt(rais,"oylayapti");say(rais,"Qabul qildim! O'ylab ko'ray...");await sleep(1400);
- say(rais,`Bu ${a.n}ga.`);setSt(rais,"kutmoqda");log(`${tag(rais)} vazifani ${tag(a)}ga topshirdi`);
+ const pr={id:++PID,text,ag:id,st:"navbatda",p:0,t0:Date.now(),note:""};PR.unshift(pr);renderPr();
+ emo(rais,"bang");setSt(rais,"oylayapti");say(rais,"Qabul qildim! O'ylab ko'ray...");await sleep(1400);
+ say(rais,`Bu ${a.n}ga.`);setSt(rais,"kutmoqda");
  await fly(rais.x,rais.y,a.x,a.y,a.c);
- if(a.task){a.queue.push(text);log(`${tag(a)} band, vazifa navbatga qo'yildi`);return}
- await work(a,text)}
-async function work(a,text){
- const tok=++a.tok;a.task=text;a.p=0;a.until=Infinity;emo(a,"bang");
+ if(a.task){a.queue.push(pr);pr.note="navbatda turibdi";renderPr();return}
+ await work(a,pr)}
+async function work(a,pr){const text=pr.text;
+ const tok=++a.tok;a.task=text;a.p=0;a.until=Infinity;pr.st="bajarilyapti";pr.note="";renderPr();emo(a,"bang");
  if(a.st==="uxlayapti")say(a,"Uyg'ondim! Ketdim!");else say(a,"Qabul qildim!");
  await go(a,seat(a.i),tok);setSt(a,"oylayapti");await sleep(1300);setSt(a,"ishlayapti");
- const needOk=/o'chir|yubor|nashr|to'la|push|delete/i.test(text);let asked=false;
- for(let p=0;p<=100;p+=4){prog(a,p);await sleep(450);
+ const needOk=/o'chir|yubor|nashr|to'la|push|delete/i.test(text);let asked=false,cancel=false;
+ for(let p=0;p<=100;p+=4){prog(a,p);pr.p=p;renderPr();await sleep(450);
   if(p===44&&!asked&&HELP[a.id]&&Math.random()<.85){asked=true;const [hid,q,ans]=HELP[a.id];const h=M[hid];
-   setSt(a,"asabiy");emo(a,"q",2200);say(a,q,3200,true);log(`${tag(a)} asabiy: “${q}” → ${tag(h)}dan so'rayapti`);await sleep(1300);
+   setSt(a,"asabiy");emo(a,"q",2200);say(a,q,3200,true);pr.note=`${h.n}dan yordam so'rayapti`;renderPr();await sleep(1300);
    const dest=h.inCab!==null&&h.pos==="seat"?aisle(h.inCab):P(h.x+46,h.y,null,null);
-   await go(a,dest,tok);say(h,ans,3000);emo(h,"bulb");await sleep(2600);say(a,"Rahmat!");setSt(a,"ishlayapti");await go(a,seat(a.i),tok);}
-  if(p===72&&needOk){setSt(a,"ruxsat");say(a,"Bu amal uchun sizning ruxsatingiz kerak.",4000);
-   const ok=await new Promise(res=>{const li=log(`${tag(a)} ruxsat so'rayapti: “${esc(text)}”<div class="ap"><button type="button">Ha, ruxsat</button><button type="button" class="gh">Yo'q</button></div>`);const b=li.querySelectorAll("button");b[0].onclick=()=>{li.querySelector(".ap").remove();res(true)};b[1].onclick=()=>{li.querySelector(".ap").remove();res(false)}});
-   if(!ok){say(a,"Bekor qildim, hech narsa o'zgarmadi.");log(`${tag(a)}: bekor qilindi, hech narsa o'zgarmadi`);break}
-   log(`Siz ruxsat berdingiz, ${tag(a)} davom etmoqda`);setSt(a,"ishlayapti")}}
- if(a.p>=100){say(a,"Tayyor!");emo(a,"ok");setSt(a,"kutmoqda");await check(a,text)}
+   await go(a,dest,tok);say(h,ans,3000);emo(h,"bulb");await sleep(2600);say(a,"Rahmat!");setSt(a,"ishlayapti");pr.note="";await go(a,seat(a.i),tok);}
+  if(p===72&&needOk){setSt(a,"ruxsat");pr.st="ruxsat";renderPr();say(a,"Bu amal uchun sizning ruxsatingiz kerak.",4000);
+   const ok=await ask(a,pr);
+   if(!ok){say(a,"Bekor qildim, hech narsa o'zgarmadi.");pr.st="bekor";pr.t1=Date.now();cancel=true;break}
+   pr.st="bajarilyapti";setSt(a,"ishlayapti")}}
+ if(!cancel){say(a,"Tayyor!");emo(a,"ok");setSt(a,"kutmoqda");pr.st="tekshiruvda";pr.p=100;renderPr();await check(a,pr);
+  pr.st="tayyor";pr.t1=Date.now();DONE[a.id]++;toast(pr);}
+ save();renderPr();roster();
  a.task=null;a.p=0;panel();
  if(a.queue.length){work(a,a.queue.shift());return}
  const s=take(a,"coffee"),t2=++a.tok;if(s){s.by=a;if(await go(a,s,t2)){a.spot=s;setSt(a,"dam");say(a,"Bir piyola choy ichib kelay.")}else s.by=null}a.until=Date.now()+9000}
-async function check(a,text){const q=M.tekshiruvchi,rais=M.rais;const tok=++q.tok;q.until=Infinity;
+async function check(a,pr){const q=M.tekshiruvchi,rais=M.rais;const tok=++q.tok;q.until=Infinity;
  await fly(a.x,a.y,q.x,q.y,a.c);say(q,`${a.n}, natijangni ko'ray-chi...`);await go(q,seat(q.i),tok);setSt(q,"ishlayapti");await sleep(2400);
- say(q,"Tekshirdim: sifat joyida.");emo(q,"ok");setSt(q,"kutmoqda");await fly(q.x,q.y,rais.x,rais.y,a.c);say(rais,"Natija sizga yuborildi!");
- log(`${tag(q)} qabul qildi, ${tag(rais)} natijani sizga yubordi: “${esc(text)}”`);q.until=Date.now()+5000}
+ say(q,"Tekshirdim: sifat joyida.");emo(q,"ok");setSt(q,"kutmoqda");await fly(q.x,q.y,rais.x,rais.y,a.c);say(rais,"Natija tayyor!");q.until=Date.now()+5000}
+const askEl=document.getElementById("ask"),askL=document.getElementById("askl");
+function ask(a,pr){return new Promise(res=>{const d=document.createElement("div");d.className="aq";
+ d.innerHTML=`<div><b style="color:${a.c}">${a.n}</b> ruxsat so'rayapti:<br>“${esc(pr.text)}”</div><div class="ctl"><button type="button">Ha, ruxsat</button><button type="button" class="gh">Yo'q</button></div>`;
+ const b=d.querySelectorAll("button");const fin=v=>{if(!d.isConnected)return;pr.res=null;d.remove();askEl.hidden=!askL.children.length;badge();res(v)};b[0].onclick=()=>fin(true);b[1].onclick=()=>fin(false);pr.res=fin;renderPr();
+ askL.appendChild(d);askEl.hidden=false;badge()})}
+const FN={hujjatchi:"hujjat",tadqiqotchi:"tadqiqot",rassom:"rasm-tavsifi",montajchi:"video-reja",jarvis:"jarvis-hisobot",qoriqchi:"xavfsizlik-hisoboti"};
+const fname=p=>`${FN[p.ag]||"natija"}-${p.id}.md`;
+const tm=t=>new Date(t).toTimeString().slice(0,5);
+function fileText(p){const a=M[p.ag];return `# ${p.text}\n\n- Bajaruvchi: ${a.n} (${a.r})\n- Tekshirdi: Tekshiruvchi\n- Boshlandi: ${new Date(p.t0).toLocaleString("uz-UZ")}\n- Tugadi: ${new Date(p.t1).toLocaleString("uz-UZ")}\n\nBu namuna fayl. Agentlar ulangandan keyin bu yerda haqiqiy natija bo'ladi: .pptx, .docx, .xlsx, .mp4, rasm yoki hisobot.\n`}
+const SLP={navbatda:"Navbatda",bajarilyapti:"Bajarilyapti",ruxsat:"Ruxsatingizni kutyapti",tekshiruvda:"Tekshiruvda",tayyor:"Tayyor",bekor:"Bekor qilindi"};
+const mini=a=>`<span class="mini">${sprite(a)}</span>`;
+function renderPr(){const act=PR.filter(p=>!["tayyor","bekor"].includes(p.st)),rdy=PR.filter(p=>["tayyor","bekor"].includes(p.st));
+ document.getElementById("act").innerHTML=act.length?act.map(p=>{const a=M[p.ag];return `<div class="pj" style="--c:${a.c}">${mini(a)}<div><b>${esc(p.text)}</b><small>${a.n} · ${SLP[p.st]}${p.note?" · "+p.note:""}</small><div class="bar"><i style="width:${p.p}%"></i></div>${p.st==="ruxsat"&&p.res?`<div class="ctl" style="margin-top:10px"><button type="button" data-ok="${p.id}">Ha, ruxsat</button><button type="button" class="gh" data-no="${p.id}">Yo'q</button></div>`:""}</div><span class="pc">${p.p}%</span></div>`}).join(""):`<p class="empty">Hozir bajarilayotgan vazifa yo'q. <a href="#ofis">Ofisda vazifa bering</a>.</p>`;
+ document.getElementById("rdy").innerHTML=rdy.length?rdy.map(p=>{const a=M[p.ag],ok=p.st==="tayyor";return `<div class="pj rd${ok?"":" off"}" style="--c:${a.c}">${mini(a)}<div><b>${esc(p.text)}</b><small>${a.n} · ${ok?tm(p.t1)+" · "+fname(p):"Bekor qilindi, hech narsa o'zgarmadi"}</small></div>${ok?`<button type="button" data-dl="${p.id}">Yuklab olish</button>`:""}</div>`}).join(""):`<p class="empty">Hali tayyor loyiha yo'q.</p>`;
+ document.getElementById("na").textContent=act.length;document.getElementById("nr").textContent=rdy.filter(p=>p.st==="tayyor").length;
+ document.getElementById("nt").textContent=PR.length;badge()}
+function badge(){const n=PR.filter(p=>!["tayyor","bekor"].includes(p.st)).length;const b=document.getElementById("nb");b.textContent=n;b.hidden=!n;
+ const q=document.getElementById("nq");const k=askL.children.length;q.textContent=k;q.hidden=!k}
+let DL=null;try{if(window.claude&&window.claude.use)window.claude.use("downloads").then(d=>{DL=d}).catch(()=>{})}catch(e){}
+document.getElementById("act").addEventListener("click",e=>{const d=e.target.dataset||{};const id=d.ok||d.no;if(!id)return;const p=PR.find(x=>x.id==id);if(p&&p.res)p.res(!!d.ok)});
+document.getElementById("rdy").addEventListener("click",async e=>{const id=e.target.dataset&&e.target.dataset.dl;if(!id)return;const p=PR.find(x=>x.id==id),b=e.target;
+ if(DL){try{await DL.save({filename:fname(p),data:fileText(p)});b.textContent="Saqlandi"}catch(err){b.textContent=err&&err.code==="declined"?"Bekor qilindi":"Yuklab bo'lmadi"}}
+ else{try{await navigator.clipboard.writeText(fileText(p));b.textContent="Matn nusxalandi"}catch(err){b.textContent="Yuklab bo'lmadi"}}
+ setTimeout(()=>b.textContent="Yuklab olish",2200)});
+const toastEl=document.getElementById("toast");
+function toast(p){toastEl.innerHTML=`<b>Tayyor:</b> ${esc(p.text)} <a href="#loyihalar">Loyihalarda ko'rish</a>`;toastEl.classList.add("show");clearTimeout(toastEl.t);toastEl.t=setTimeout(()=>toastEl.classList.remove("show"),5000)}
+const FUN={rais:["Ko'k choy","Har kuni ofisga birinchi keladi","Rejasiz ish, ish emas."],hujjatchi:["Sutli qahva","Har vergulni ikki marta tekshiradi","Slayd ko'p bo'lsa, gap oz bo'lsin."],tadqiqotchi:["Limonli choy","Brauzerida doim 40 ta oyna ochiq","Manbasi yo'q gap, mish-mish."],rassom:["Kakao","Fonni uch marta almashtirmaguncha tinchimaydi","Rang bu kayfiyat."],montajchi:["Sovuq qahva","Musiqasiz montaj qilolmaydi","Kesim ritmga tushishi kerak."],jarvis:["Elektr toki","\"Jarvis\" deyilmaguncha jim turadi","Buyruq qabul qilindi."],qoriqchi:["Qora choy","Har eshikni ikki marta qulflaydi","Kalitni hech kimga berma."],tekshiruvchi:["Oddiy suv","Xatoni uch metrdan sezadi","Yana bir bor tekshiramiz."]};
+function roster(){document.getElementById("staff").innerHTML=AG.map(a=>{const f=FUN[a.id];return `<article class="sf" id="x-${a.id}" style="--c:${a.c}"><div class="sfp">${sprite(a)}</div><div><h3>${a.n}</h3><small>${a.r}</small><dl><dt>Sevimli ichimligi</dt><dd>${f[0]}</dd><dt>Odati</dt><dd>${f[1]}</dd><dt>Shiori</dt><dd>“${f[2]}”</dd><dt>Bajargan vazifalari</dt><dd><b>${DONE[a.id]}</b></dd></dl></div></article>`}).join("")+`<article class="sf" style="--c:#e08a3c"><div class="sfp cat-p">${cat.querySelector("svg").outerHTML}</div><div><h3>Mosh</h3><small>Ofis mushugi</small><dl><dt>Sevimli ichimligi</dt><dd>Sut</dd><dt>Odati</dt><dd>Divandagi eng yaxshi joyni egallaydi</dd><dt>Shiori</dt><dd>“Miyov.”</dd><dt>Bajargan vazifalari</dt><dd><b>0</b>, lekin hamma uni yaxshi ko'radi</dd></dl></div></article>`}
+function view(){const v=location.hash==="#loyihalar"?"loyihalar":"ofis";document.getElementById("v-ofis").hidden=v!=="ofis";document.getElementById("v-loyihalar").hidden=v!=="loyihalar";
+ document.querySelectorAll(".tabs a").forEach(t=>t.classList.toggle("cur",t.getAttribute("href")==="#"+v));if(v==="ofis")requestAnimationFrame(()=>fit&&fit())}
+window.addEventListener("hashchange",()=>{view();scrollTo(0,0)});
 const CHAT=[["Telegram bot qilsak-chi?","Zo'r g'oya, mijozlar ko'p bo'ladi."],["Yangi skill chiqibdi, ko'rdingmi?","Avval Qo'riqchi tekshirsin."],["Prezentatsiyaga animatsiya qo'shsak?","Faqat me'yorida bo'lsin."],["Render 2 barobar tez bo'ldi!","Qanday qilding? O'rgat."],["Bugun nechta vazifa bajardik?","Jurnalga qarasang bo'ladi."],["O'zbekcha ovoz yaxshilandi.","Ha, endi \"Jarvis\"ni aniq eshitadi."],["Mushuk yana divanimni egalladi.","U bu ofisning haqiqiy boshlig'i."]];
 const COF=["Choy vaqti.","Qahva ichib olay.","Bir oz nafas rostlay."];
 async function idle(){if(paused)return;const now=Date.now();
@@ -676,15 +565,8 @@ document.getElementById("tm").onclick=e=>{mode=(mode+1)%4;e.target.textContent=M
 const ow=document.getElementById("ow"),sizer=document.getElementById("sizer");
 function fit(){const w=ow.clientWidth-16;const k=Math.max(.62,Math.min(1,w/W));world.style.transform=`scale(${k})`;sizer.style.width=W*k+"px";sizer.style.height=H*k+"px"}
 const ro=new ResizeObserver(fit);ro.observe(ow);fit();
-document.getElementById("team").innerHTML=AG.map(a=>`<article class="ac" id="a-${a.id}" style="--c:${a.c}"><header>${svgP(a.c,a.h)}<div><h3>${a.n}</h3><small>${a.r}</small></div></header><div class="lab">Vazifalari</div><ul>${a.does.map(d=>`<li>${d}</li>`).join("")}</ul><div class="lab">Skill va vositalar</div><div class="tools">${a.tools.map(t=>`<span>${t[0]}${t[1]?` <b>★ ${t[1]}</b>`:""}</span>`).join("")}</div><div class="lab">Natija</div><div>${a.out}</div><div class="lab">Cheklov</div><div>${a.lim}</div></article>`).join("");
-const ST=[["Kutmoqda","Vazifa yo'q, stol yonida","Stolda o'tiradi, ko'zlarini pirpiratadi, monitor o'chiq","agent.idle"],["O'ylayapti","Reja tuzyapti","Boshi ustida sakrovchi uch nuqta","task.planning"],["Ishlayapti","Vazifani bajaryapti","Qo'llari klaviaturada tez yuradi, ekranda kod oqadi, progress chizig'i","task.progress"],["Asabiy","Ma'lumot yetishmaydi yoki 2 urinish xato","Yuzi qizaradi, boshidan bug' chiqadi, boshqa agentning kabinetiga borib so'raydi","task.blocked"],["Ruxsat kutmoqda","Qaytarib bo'lmaydigan amal oldidan","Qo'lini ko'taradi, jurnalda \"Ha / Yo'q\" tugmalari, Telegramga xabar","task.needs_approval"],["Gaplashyapti","Maslahat yoki g'oya almashish","Yig'ilish stolida qo'l silkitib gapiradi, g'oya chirog'i yonadi","agent.chat"],["Dam olyapti","Vazifa tugagach 1–3 daqiqa","Qahvaxonada qo'lida bug'langan choy bilan turadi","agent.break"],["Uxlayapti","15+ daqiqa vazifa yo'q (resurs tejash)","Divanda boshini egib uxlaydi, \"z Z\" uchadi","agent.sleep"]];
-document.getElementById("states").innerHTML=ST.map(r=>`<tr><td data-l="Holat"><b>${r[0]}</b></td><td data-l="Qachon">${r[1]}</td><td data-l="Ko'rinishi">${r[2]}</td><td data-l="Hodisa"><code>${r[3]}</code></td></tr>`).join("");
-const SK=[];AG.forEach(a=>a.tools.forEach(t=>{if(t[1])SK.push([t[0],t[1],a.n,a.id])}));
-const WHY={"anthropics/skills":"docx, pptx, xlsx, pdf skill'lari","microsoft/markitdown":"Har qanday hujjatni o'qish","presenton/presenton":"Chiroyli prezentatsiya generatori","blader/humanizer":"Matnni tabiiy qilish","openai/openai-agents-python":"Agentlarni boshqarish","paperclipai/paperclip":"Agentlar kompaniyasi namunasi","NousResearch/hermes-agent":"O'rganuvchi agent, skill katalogi","browser-use/browser-use":"Brauzerda ishlash","mvanhorn/last30days-skill":"So'nggi 30 kun trendlari","artokun/comfyui-mcp":"Rasm va video generatsiya","GabrieleLozupone/kokon":"Rasmni so'z bilan tahrirlash","ai-boost/awesome-image-video-prompts":"Tayyor promptlar","OpenMontageInc/OpenMontage":"Video ishlab chiqarish quvurlari","remotion-dev/remotion":"Kod bilan video yasash","nexu-io/openmotion":"Namuna videodan motion grafika","krillinai/OpenCreator":"Dublyaj va tarjima","veedstudio/open-edit":"Subtitr va montaj","KyaniteLabs/kinocut":"FFmpeg MCP server","CursorTouch/Windows-MCP":"Windows'ni boshqarish","trycua/cua":"Computer use","mediar-ai/terminator":"Windows UI avtomatlashtirish","openai/whisper":"Nutqni matnga","gitleaks/gitleaks":"Kodga tushgan kalitlar","aquasecurity/trivy":"Zaif kutubxonalar","trufflesecurity/trufflehog":"Kalitlarni tekshirish","semgrep/semgrep":"Xavfli kod naqshlari","github/github-mcp-server":"GitHub bilan ishlash","Pantheon-Security/medusa":"Skill va hook'larni tekshirish"};
-document.getElementById("sk").innerHTML=SK.map(r=>`<tr><td data-l="Repo"><a href="https://github.com/${r[0]}">${r[0]}</a></td><td data-l="Yulduz" class="n">${r[1]}</td><td data-l="Kim"><span style="color:${M[r[3]].c};font-weight:700">${r[2]}</span></td><td data-l="Nima uchun">${WHY[r[0]]||""}</td></tr>`).join("");
-document.getElementById("insp").innerHTML=[["ringhyacinth/Star-Office-UI","7.6k"],["pixtuoid/pixtuoid","576"],["harishkotra/agent-office","426"],["W17ant/Claude-Office","399"],["Gaurav2693/ai-office","70"]].map(t=>`<span><a href="https://github.com/${t[0]}">${t[0]}</a> <b style="color:var(--acc)">★ ${t[1]}</b></span>`).join("");
-document.querySelectorAll("[data-copy]").forEach(b=>b.addEventListener("click",async()=>{try{await navigator.clipboard.writeText(document.getElementById(b.dataset.copy).textContent);b.textContent="Nusxa olindi"}catch(e){b.textContent="Qo'lda belgilang"}setTimeout(()=>b.textContent="Nusxa olish",1800)}));
-init();
+
+renderPr();roster();view();init();
 }
 </script>
 </body>

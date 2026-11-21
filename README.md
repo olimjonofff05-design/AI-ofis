@@ -14,7 +14,7 @@
 | Tekshiruvchi | Natijalar sifatini tekshirish |
 
 ## Hozirgi holat
-- `office-ui/index.html`: to'liq TZ va jonli ofis ekranining namunasi (brauzerda oching).
+- `office-ui/index.html`: jonli ofis, vazifa berish, loyihalar sahifasi va xodimlar ro'yxati (brauzerda oching).
 - Agentlar hali ulanmagan: bu 1-bosqich ishi.
 
 ## Bosqichlar
@@ -23,4 +23,3 @@
 3. Jarvis: Windows boshqaruvi, ovoz (3 hafta)
 4. Rassom, Montajchi, uslub pasporti (3–4 hafta)
 
-To'liq texnik topshiriq: `office-ui/index.html` ichida.
