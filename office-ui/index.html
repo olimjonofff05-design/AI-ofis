@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI Ofis TZ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+/* VOICE work: texnik topshiriq + jonli mahsulot namunasi
+   IDEA yuqoridan ko'rinadigan ofis rejasi (arxitektor chizmasi) jonlanadi
+   PICTURE 8 kabinetli ofis, agentlar yuradi, ishlaydi, uxlaydi, bahslashadi
+   COLOUR oq qog'oz, parket, qora devor, har agentning o'z rangi, aksent qizil-olov
+   TYPE Onest 800 + Onest
+   LAYOUT ofis chapda, boshqaruv o'ngda; telefonda: sarlavha, ofis, boshqaruv */
+:root{color-scheme:light dark;--bg:light-dark(#ffffff,#121110);--ink:light-dark(#1d1a17,#efe9e1);--mut:light-dark(#6a625a,#a99f94);--line:light-dark(#e6e0d8,#2c2825);--card:light-dark(#faf7f3,#1b1917);--acc:#e4572e;--floor:light-dark(#e8d9c0,#3a3027);--plank:light-dark(#dcc9aa,#332a22);--corr:light-dark(#d9e2dc,#262b29);--wall:light-dark(#2b2622,#050505);--desk:light-dark(#a9784f,#6b4a30);--sofa:light-dark(#5b6b8c,#3c4760);--tile:light-dark(#cfd9d2,#222725);--wtop:light-dark(#f3ead9,#2d2823);--wbot:light-dark(#e6d9c1,#25201c);--base:light-dark(#b9a17f,#17130f);--dtop:light-dark(#c8925f,#7a5638);--chair:light-dark(#3b4252,#20242c)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+html{scroll-padding-top:72px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Onest,system-ui,sans-serif;overflow-x:clip}
+h1,h2,h3{font-weight:800;letter-spacing:-.02em;line-height:1.08;text-wrap:balance;margin:0}
+h1{font-size:clamp(32px,4.4vw,50px)}
+h2{font-size:clamp(26px,3vw,36px);margin-bottom:14px}
+h3{font-size:19px;letter-spacing:-.01em}
+p{margin:0 0 12px;max-width:68ch}
+a{color:inherit}
+.band{padding:clamp(28px,4vw,56px) max(5vw,16px)}
+.wrap{max-width:1240px;margin:0 auto}
+.top{background:var(--wall);color:#f4eee6;position:sticky;top:0;z-index:30}
+.top .wrap{display:flex;gap:18px;align-items:center;padding:10px max(5vw,16px)}
+.logo{font-weight:800;white-space:nowrap;flex:none}
+.logo b{color:var(--acc)}
+.scroll{overflow-x:auto;display:flex;gap:4px;scrollbar-width:none}
+.scroll a{flex:none;text-decoration:none;padding:8px 10px;border-radius:8px;font-size:14px;color:#d9d1c6}
+.scroll a:hover,.scroll a:focus-visible{background:#ffffff1a;color:#fff;outline:none}
+.head{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:24px;align-items:end;padding-bottom:18px}
+.head p{color:var(--mut);margin:0}
+.figs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.figs div{border-top:3px solid var(--ink);padding-top:6px}
+.figs b{display:block;font-size:clamp(26px,3vw,34px);line-height:1}
+.figs span{font-size:13px;color:var(--mut)}
+.stage{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:18px;align-items:start}
+.ow{overflow-x:auto;border-radius:14px;background:var(--wall);padding:8px}
+.world{position:relative;width:1000px;height:640px;transform-origin:0 0;border-radius:8px;overflow:hidden;--sky:linear-gradient(#7cc8ff,#cdeeff);background:repeating-conic-gradient(var(--corr) 0 25%,var(--tile) 0 50%) 0 0/40px 40px}
+.world>*{position:absolute}
+.cab{width:230px;height:190px;border:6px solid var(--wall);border-top:0;background:repeating-linear-gradient(90deg,var(--floor) 0 36px,var(--plank) 36px 38px);z-index:0}
+.wallb{left:0;top:0;width:100%;height:46px;background:linear-gradient(var(--wtop),var(--wbot));box-shadow:inset 0 -6px 0 var(--base)}
+.win{position:absolute;top:8px;width:64px;height:28px;border:3px solid #fff;border-radius:3px;background:var(--sky);overflow:hidden;box-shadow:0 2px 0 #0002}
+.win::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:3px;background:#fff;transform:translateX(-50%)}
+.cl{position:absolute;top:6px;width:22px;height:8px;border-radius:8px;background:#fff;opacity:.9;animation:cl 26s linear infinite}
+.night .cl{display:none}
+.star{position:absolute;width:2px;height:2px;background:#fff;border-radius:50%;display:none;animation:tw 2.4s infinite alternate}
+.night .star{display:block}
+@keyframes cl{from{transform:translateX(-30px)}to{transform:translateX(80px)}}
+@keyframes tw{to{opacity:.2}}
+.poster{position:absolute;top:9px;border-radius:2px;box-shadow:0 2px 0 #0003}
+.doorgap{height:6px;background:var(--corr);z-index:1}
+.doorway{width:50px;height:46px;background:linear-gradient(#2a221c,#3b3029);border-left:3px solid var(--wall);border-right:3px solid var(--wall);z-index:1}
+.doorway::after{content:"";position:absolute;right:-12px;top:4px;width:10px;height:42px;background:#a9784f;transform:skewY(-20deg);border-radius:2px}
+.plate{font-size:12px;font-weight:700;background:var(--wall);color:#fff;padding:1px 7px;border-radius:4px;white-space:nowrap;z-index:2}
+.desk{width:140px;height:44px;border-radius:5px;background:linear-gradient(var(--dtop) 0 26px,var(--desk) 26px);box-shadow:0 5px 0 #0003}
+.desk::before,.desk::after{content:"";position:absolute;bottom:-9px;width:6px;height:10px;background:var(--desk);filter:brightness(.7)}
+.desk::before{left:6px}.desk::after{right:6px}
+.kb{position:absolute;left:62px;top:9px;width:38px;height:9px;border-radius:2px;background:repeating-linear-gradient(90deg,#666 0 3px,#888 3px 5px)}
+.mug{position:absolute;left:112px;top:5px;width:9px;height:11px;border-radius:2px 2px 4px 4px;background:#fff;box-shadow:inset 0 3px 0 #6b4226}
+.paper{position:absolute;left:8px;top:14px;width:16px;height:10px;background:#fff;transform:rotate(-8deg);box-shadow:3px -2px 0 #eee}
+.mon{width:48px;height:38px}
+.mon .sc{position:absolute;inset:0 0 8px;border:3px solid #222;border-radius:3px;background:#1a1d24;overflow:hidden}
+.mon .sc::after{content:"";position:absolute;inset:0;opacity:0;background:repeating-linear-gradient(#0000 0 3px,var(--c) 3px 5px,#0000 5px 7px,#ffffff88 7px 8px,#0000 8px 11px);background-size:60% 22px;background-repeat:repeat;transition:opacity .3s}
+.mon.on .sc::after{opacity:.9;animation:code 1.2s linear infinite}
+.mon.on .sc{box-shadow:0 0 16px 3px var(--c)}
+.mon::after{content:"";position:absolute;left:19px;bottom:0;width:10px;height:9px;background:#333;box-shadow:-6px 7px 0 -3px #333,6px 7px 0 -3px #333}
+@keyframes code{to{background-position:0 -22px}}
+.chair{width:42px;height:44px;border-radius:12px 12px 6px 6px;background:var(--chair);box-shadow:inset 0 -8px 0 #0003}
+.lamp{width:14px;height:24px}
+.lamp::before{content:"";position:absolute;left:0;top:0;width:14px;height:9px;border-radius:8px 8px 2px 2px;background:#f2c14e}
+.lamp::after{content:"";position:absolute;left:6px;top:8px;width:2px;height:16px;background:#555}
+.gl{pointer-events:none;border-radius:50%;background:radial-gradient(#ffe7a3cc,#ffe7a300 70%);mix-blend-mode:screen;opacity:0;transition:opacity 1s;z-index:4001}
+.night .gl{opacity:1}
+.mgl{pointer-events:none;border-radius:50%;opacity:0;transition:opacity .4s;z-index:4001;mix-blend-mode:screen}
+.mgl.on{opacity:.55}
+.night .mgl.on{opacity:1}
+.dim{inset:0;pointer-events:none;z-index:4000;background:#0b1235;opacity:0;transition:opacity 1.5s}
+.eve .dim{opacity:.18}.night .dim{opacity:.42}
+.obj{pointer-events:none}
+.plant{width:30px;height:44px}
+.plant i{position:absolute;left:5px;bottom:0;width:20px;height:16px;background:#c8693a;border-radius:2px 2px 6px 6px}
+.plant b{position:absolute;left:0;top:0;width:30px;height:32px;border-radius:50% 50% 45% 45%;background:radial-gradient(circle at 40% 30%,#8fd18f,#2f7d3b);transform-origin:50% 100%;animation:sway 5s ease-in-out infinite alternate}
+@keyframes sway{from{transform:rotate(-3deg)}to{transform:rotate(3deg)}}
+.rug{border-radius:14px;background:repeating-linear-gradient(45deg,#e4572e2a 0 9px,#0000 9px 18px),#e4572e14;z-index:1}
+.ag{width:48px;height:64px;cursor:pointer}
+.ag svg{width:48px;height:64px;display:block;overflow:visible}
+.ag.flip svg{transform:scaleX(-1)}
+.ag svg g{transform-box:fill-box}
+.lg,.arm{transform-origin:50% 0}
+.walk .lg.l{animation:lgA .32s infinite alternate}
+.walk .lg.r{animation:lgA .32s infinite alternate-reverse}
+.walk .bd{animation:bob .16s infinite alternate}
+@keyframes lgA{from{transform:rotate(24deg)}to{transform:rotate(-24deg)}}
+@keyframes bob{to{transform:translateY(-1.5px)}}
+.st-ishlayapti .arm{animation:typ .13s infinite alternate}
+.st-ishlayapti .arm.r{animation-delay:.06s}
+@keyframes typ{from{transform:rotate(-10deg)}to{transform:rotate(6deg) translateY(-1px)}}
+.eyes{transform-origin:50% 50%;animation:blink 4.2s infinite}
+@keyframes blink{0%,94%,100%{transform:scaleY(1)}96%{transform:scaleY(.1)}}
+.ce,.m2,.cup,.ang,.visor2{display:none}
+.st-uxlayapti .eyes,.st-uxlayapti .mouth{display:none}
+.st-uxlayapti .ce{display:block}
+.st-uxlayapti .hd{transform:rotate(16deg) translateY(2px);transform-origin:50% 100%}
+.st-uxlayapti .visor{fill:#2c3a55}
+.st-asabiy .sk{fill:#f3907c}
+.st-asabiy .mouth{display:none}
+.st-asabiy .m2,.st-asabiy .ang{display:block}
+.st-asabiy .bd{animation:shake .12s infinite}
+@keyframes shake{0%{transform:translateX(-1.5px)}100%{transform:translateX(1.5px)}}
+.st-dam .cup{display:block}
+.st-dam .arm.r{transform:rotate(-35deg)}
+.steam{animation:stm 1.6s infinite}
+@keyframes stm{0%{opacity:0;transform:translateY(2px)}50%{opacity:1}100%{opacity:0;transform:translateY(-4px)}}
+.st-gaplashyapti .arm.r{animation:wave .5s infinite alternate}
+@keyframes wave{from{transform:rotate(-20deg)}to{transform:rotate(-70deg)}}
+.st-ruxsat .arm.r{transform:rotate(-165deg)}
+.led{animation:led 1s steps(2) infinite}
+@keyframes led{50%{fill:#5cff7a}}
+.ovl{inset:0;pointer-events:none;z-index:5000}
+.ov{position:absolute;width:0;height:0}
+.ov .nm{position:absolute;bottom:68px;left:0;transform:translateX(-50%);font-size:11px;font-weight:700;white-space:nowrap;background:var(--bg);color:var(--ink);padding:0 6px;border-radius:8px;border:2px solid var(--c);opacity:.92}
+.ov .pb{position:absolute;bottom:88px;left:-20px;width:40px;height:5px;border-radius:3px;background:#0004;display:none}
+.ov .pb i{display:block;height:100%;width:0;background:var(--c);border-radius:3px;transition:width .4s}
+.ov.st-ishlayapti .pb,.ov.st-ruxsat .pb,.ov.st-asabiy .pb{display:block}
+.ov .z{position:absolute;left:10px;bottom:58px;font-weight:800;font-size:14px;color:#9fb0d0;display:none;animation:zz 2.2s infinite;white-space:nowrap}
+.ov.st-uxlayapti .z{display:block}
+.ov .th{position:absolute;bottom:88px;left:-14px;display:none;gap:3px}
+.ov .th i{width:6px;height:6px;border-radius:50%;background:var(--ink);opacity:.6;animation:dots 1s infinite}
+.ov .th i:nth-child(2){animation-delay:.15s}.ov .th i:nth-child(3){animation-delay:.3s}
+.ov.st-oylayapti .th{display:flex}
+@keyframes dots{50%{transform:translateY(-4px);opacity:1}}
+.ov .pf{position:absolute;bottom:64px;left:-14px;width:28px;height:14px;display:none}
+.ov.st-asabiy .pf{display:block}
+.pf i{position:absolute;width:9px;height:9px;border-radius:50%;background:#fff;opacity:0;animation:puff 1s infinite}
+.pf i:nth-child(2){left:16px;animation-delay:.5s}
+@keyframes puff{0%{opacity:.9;transform:translateY(0) scale(.6)}100%{opacity:0;transform:translateY(-14px) scale(1.3)}}
+.ov .emo{position:absolute;bottom:96px;left:-14px;width:28px;height:28px;opacity:0;transform:scale(.3);transition:opacity .2s,transform .25s cubic-bezier(.3,1.6,.6,1)}
+.ov .emo.show{opacity:1;transform:scale(1)}
+.bub{position:absolute;bottom:92px;left:0;transform:translateX(-50%) scale(.9);background:var(--bg);color:var(--ink);border:2px solid var(--c);border-radius:12px;padding:5px 10px;font-size:14px;line-height:1.3;width:max-content;max-width:210px;opacity:0;transition:opacity .25s,transform .25s;box-shadow:0 4px 0 #0002}
+.bub::after{content:"";position:absolute;left:50%;bottom:-8px;width:12px;height:12px;background:inherit;border-right:2px solid var(--c);border-bottom:2px solid var(--c);transform:translateX(-50%) rotate(45deg)}
+.bub.show{opacity:1;transform:translateX(-50%) scale(1)}
+.bub.hot{border-color:#e02020;background:light-dark(#fff0ee,#3a1512)}
+.bub.hot::after{border-color:#e02020}
+.ov.home .nm{display:none}
+.ov.lf .bub{left:-24px;transform:scale(.9)}.ov.lf .bub.show{transform:none}.ov.lf .bub::after{left:24px;transform:rotate(45deg)}
+.ov.rt .bub{left:auto;right:-24px;transform:scale(.9)}.ov.rt .bub.show{transform:none}.ov.rt .bub::after{left:auto;right:12px;transform:rotate(45deg)}
+.ov.up .bub{bottom:34px;left:30px;right:auto;transform:scale(.9)}.ov.up .bub.show{transform:none}.ov.up .bub::after{left:-7px;right:auto;bottom:10px;transform:rotate(135deg)}
+.ov.up.rt .bub{left:auto;right:30px}.ov.up.rt .bub::after{left:auto;right:-7px;transform:rotate(-45deg)}
+.tok{position:absolute;width:22px;height:26px;margin:-13px 0 0 -11px;z-index:6;filter:drop-shadow(0 3px 2px #0005)}
+.cat{width:38px;height:26px;cursor:pointer}
+.cat svg{width:38px;height:26px;display:block;overflow:visible}
+.cat.flip svg{transform:scaleX(-1)}
+.cat.walk .cl1{animation:lgA .25s infinite alternate;transform-origin:50% 0;transform-box:fill-box}
+.cat.walk .cl2{animation:lgA .25s infinite alternate-reverse;transform-origin:50% 0;transform-box:fill-box}
+.cat .tail{transform-origin:0 100%;transform-box:fill-box;animation:tail 1.4s ease-in-out infinite alternate}
+@keyframes tail{to{transform:rotate(25deg)}}
+.cat.sl .awake{display:none}.cat .slp{display:none}.cat.sl .slp{display:block}
+.zone{font-size:12px;font-weight:700;color:var(--mut);z-index:2}
+@keyframes zz{0%{opacity:0;transform:translateY(4px)}50%{opacity:1}100%{opacity:0;transform:translateY(-12px)}}
+.side{display:grid;gap:12px}
+.box{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}
+.box h3{font-size:16px;margin-bottom:8px}
+form{display:flex;gap:8px}
+input[type=text]{flex:1;font:16px Onest,sans-serif;padding:10px 12px;border-radius:10px;border:1.5px solid var(--mut);background:var(--bg);color:var(--ink);min-height:44px}
+input:focus-visible,button:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+button{font:700 15px Onest,sans-serif;border:0;border-radius:10px;min-height:44px;padding:0 14px;cursor:pointer;background:var(--acc);color:#fff}
+button.gh{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+button:hover{filter:brightness(1.08)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.chips button{font-weight:500;font-size:13px;min-height:34px;padding:4px 10px;background:var(--bg);color:var(--ink);border:1px solid var(--line);text-align:left}
+.ctl{display:flex;gap:8px;flex-wrap:wrap}
+.cnt{display:flex;gap:14px;font-size:14px;color:var(--mut);flex-wrap:wrap}
+.cnt b{color:var(--ink);font-size:18px}
+.rows{display:grid;gap:4px}
+.row{display:grid;grid-template-columns:12px minmax(0,1fr) auto;gap:8px;align-items:center;font-size:14px;padding:4px 0;border-bottom:1px solid var(--line)}
+.row:last-child{border:0}
+.dot{width:12px;height:12px;border-radius:50%}
+.row small{display:block;color:var(--mut);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chip{font-size:12px;font-weight:700;padding:2px 8px;border-radius:10px;white-space:nowrap;background:var(--line)}
+.c-ishlayapti{background:#2f6fde;color:#fff}.c-asabiy{background:#e02020;color:#fff}.c-uxlayapti{background:#55607a;color:#fff}.c-dam{background:#c98b00;color:#fff}.c-gaplashyapti{background:#7c4dff;color:#fff}.c-ruxsat{background:#ffc400;color:#222}.c-oylayapti{background:#0aa5b0;color:#fff}
+.log{list-style:none;margin:0;padding:0;max-height:220px;overflow:auto;font-size:14px}
+.log li{padding:5px 0;border-bottom:1px solid var(--line)}
+.log time{color:var(--mut);font-size:13px;margin-right:6px}
+.log .ap{display:flex;gap:6px;margin-top:6px}
+.log .ap button{min-height:36px;font-size:13px}
+.note{font-size:13px;color:var(--mut);margin-top:10px}
+.alt{background:var(--card);border-block:1px solid var(--line)}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px}
+.team{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.ac{background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:16px;scroll-margin-top:80px}
+.ac.hl{outline:3px solid var(--c)}
+.ac header{display:flex;gap:10px;align-items:center;margin-bottom:8px}
+.ac header svg{width:44px;height:58px;flex:none}
+.ac header small{display:block;color:var(--mut);font-size:14px}
+.ac ul{margin:0 0 10px;padding-left:18px}
+.ac li{margin-bottom:3px}
+.lab{font-size:13px;font-weight:700;color:var(--mut);margin:8px 0 4px}
+.tools{display:flex;flex-wrap:wrap;gap:6px}
+.tools span{font-size:13px;border:1px solid var(--line);border-radius:8px;padding:2px 8px;white-space:nowrap}
+.tools b{color:var(--c)}
+.flow{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;align-items:stretch}
+.st{background:var(--bg);border:2px solid var(--ink);border-radius:12px;padding:12px;position:relative}
+.st b{display:block;font-size:16px}
+.st span{font-size:14px;color:var(--mut)}
+.st:not(:last-child)::after{content:"";position:absolute;right:-12px;top:50%;width:12px;height:2px;background:var(--ink)}
+.bus{margin-top:10px;background:var(--wall);color:#f4eee6;border-radius:12px;padding:10px 14px;font-size:14px}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:13px;color:var(--mut);font-weight:700}
+td.n{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+pre{background:var(--wall);color:#efe9e1;border-radius:12px;padding:16px;font-size:13.5px;line-height:1.5;margin:0;overflow-x:auto}
+.cp{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.cp button{min-height:36px;font-size:13px}
+.steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.ph{border-top:6px solid var(--acc);background:var(--bg);border-radius:0 0 12px 12px;padding:14px;border-inline:1px solid var(--line);border-bottom:1px solid var(--line)}
+.ph:nth-child(2){border-top-color:#2e8b57}.ph:nth-child(3){border-top-color:#0aa5b0}.ph:nth-child(4){border-top-color:#d6127e}
+.ph b{font-size:22px;display:block}
+.ph small{color:var(--mut);font-size:14px}
+.ph ul{padding-left:18px;margin:8px 0 0}
+.chk{list-style:none;padding:0;margin:0;display:grid;gap:8px}
+.chk li{padding-left:30px;position:relative}
+.chk li::before{content:"";position:absolute;left:0;top:3px;width:18px;height:18px;border:2px solid var(--ink);border-radius:5px}
+.warn{display:grid;grid-template-columns:repeat(auto-fit,minmax(15em,1fr));gap:14px}
+.warn div{border-left:4px solid #e02020;padding:4px 0 4px 12px}
+.warn b{display:block}
+footer{background:var(--wall);color:#d9d1c6;font-size:14px}
+footer b{color:#fff}
+@media(max-width:1100px){.stage{grid-template-columns:minmax(0,1fr)}.side{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:900px){.head,.two{grid-template-columns:minmax(0,1fr)}.team{grid-template-columns:minmax(0,1fr)}.flow{grid-template-columns:minmax(0,1fr)}.st:not(:last-child)::after{right:50%;top:auto;bottom:-12px;width:2px;height:12px}.steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.side{grid-template-columns:minmax(0,1fr)}.figs{grid-template-columns:repeat(2,minmax(0,1fr))}.steps{grid-template-columns:minmax(0,1fr)}table{font-size:13px}th,td{padding:6px 4px}.stack thead{display:none}.stack tr{display:grid;padding-block:10px;border-bottom:1px solid var(--line)}.stack td{display:flex;justify-content:space-between;gap:12px;border:0;padding:3px 0;text-align:right}.stack td::before{content:attr(data-l);font-weight:700;color:var(--mut);text-align:left}}
+@media(prefers-reduced-motion:reduce){.ag,.ov,.cat{transition:none!important}.world *{animation:none!important}}
+</style>
+</head>
+<body>
+<nav class="top"><div class="wrap"><span class="logo">AI <b>Ofis</b></span><div class="scroll">
+<a href="#ofis">Ofis</a><a href="#maqsad">Maqsad</a><a href="#jamoa">Jamoa</a><a href="#arxitektura">Arxitektura</a><a href="#holatlar">Holatlar</a><a href="#skilllar">Skill'lar</a><a href="#repo">Repo</a><a href="#xavfsizlik">Xavfsizlik</a><a href="#bosqichlar">Bosqichlar</a><a href="#mezonlar">Qabul mezonlari</a><a href="#cheklovlar">Cheklovlar</a></div></div></nav>
+
+<section class="band" id="ofis"><div class="wrap">
+<div class="head">
+<div><h1>AI Ofis: 8 ta agentdan iborat o'z ishchi jamoamiz</h1></div>
+<div><p>To'liq texnik topshiriq (TZ) va jonli ofis ekranining ishlaydigan namunasi. Vazifa bering: Rais uni mutaxassisga topshiradi, siz esa kim ishlayotgani, kim dam olayotgani va kim asabiylashib yordam so'rayotganini kuzatasiz.</p></div>
+</div>
+<div class="stage">
+<div>
+<div class="ow" id="ow"><div id="sizer"><div class="world" id="world"></div></div></div>
+<p class="note">Ofisdagi harakatlar namuna simulyatsiya: haqiqiy agentlar 1-bosqichda ulanadi. Agentni bossangiz, uning TZ kartasiga o'tasiz. Kun va tun kompyuteringiz soatiga qarab almashadi; mushukni bosib ko'ring.</p>
+</div>
+<div class="side">
+<div class="box"><h3>Vazifa berish</h3>
+<form id="f"><input type="text" id="task" placeholder="Masalan: 8 slaydli prezentatsiya tayyorla" autocomplete="off"><button type="submit">Ber</button></form>
+<div class="chips" id="chips"></div></div>
+<div class="box"><div class="cnt" id="cnt"></div>
+<div class="ctl" style="margin-top:10px"><button class="gh" id="pause" type="button">Pauza</button><button class="gh" id="speed" type="button">Tezlik ×1</button><button class="gh" id="tm" type="button">Vaqt: avto</button></div></div>
+<div class="box"><h3>Jamoa holati</h3><div class="rows" id="rows"></div></div>
+<div class="box"><h3>Jurnal</h3><ul class="log" id="log"></ul></div>
+</div>
+</div>
+</div></section>
+
+<section class="band alt" id="maqsad"><div class="wrap two">
+<div><h2>Maqsad: bitta repoda yig'ilgan raqamli ofis</h2>
+<p>Bitta GitHub reposida 8 ta AI agentdan iborat jamoa quriladi. Siz vazifani oddiy o'zbek tilida berasiz: ofis sayti, Telegram yoki ovoz orqali ("Jarvis, ..."). Rais vazifani tushunadi, kerak bo'lsa qismlarga bo'ladi va mutaxassisga topshiradi. Tayyor natija Tekshiruvchidan o'tib, sizga qaytadi.</p>
+<p>Har bir agentning holati hodisalar oqimi orqali ofis ekraniga yuboriladi. Shuning uchun ekran bezak emas, balki haqiqiy nazorat paneli: qaysi agent band, qaysi biri ruxsatingizni kutyapti, qayerda xato chiqdi, bir qarashda ko'rinadi.</p></div>
+<div><h3 style="margin-bottom:10px">Asosiy talablar</h3>
+<ul class="chk">
+<li>Vazifa o'zbek, rus yoki ingliz tilida qabul qilinadi, javob shu tilda qaytadi.</li>
+<li>Har bir agent alohida papka: prompt, skill'lar, ruxsatlar va testlar bilan.</li>
+<li>Qaytarib bo'lmaydigan har qanday amal faqat sizning "Ha" javobingizdan keyin bajariladi.</li>
+<li>Ofis ekrani har bir holat o'zgarishini 1 soniya ichida ko'rsatadi.</li>
+<li>Asosiy ish Vivobook'da lokal; og'ir generatsiya bulut API orqali.</li>
+<li>Barcha harakatlar jurnalga yoziladi: kim, qachon, nima qildi, natija.</li>
+</ul></div>
+</div></section>
+
+<section class="band" id="jamoa"><div class="wrap">
+<h2>Jamoa: 8 ta agent, har biri o'z kabinetida</h2>
+<p style="color:var(--mut)">Yulduzlar soni 2026-yil 21-noyabr holatiga, GitHub qidiruvidan olindi.</p>
+<div class="team" id="team"></div>
+</div></section>
+
+<section class="band alt" id="arxitektura"><div class="wrap">
+<h2>Arxitektura: vazifa qanday yo'l bosadi</h2>
+<div class="flow">
+<div class="st"><b>Siz</b><span>Ofis sayti, Telegram bot yoki ovoz</span></div>
+<div class="st"><b>Rais</b><span>Tushunadi, bo'ladi, navbatga qo'yadi</span></div>
+<div class="st"><b>Mutaxassis agent</b><span>Skill'lar va MCP vositalari bilan bajaradi</span></div>
+<div class="st"><b>Tekshiruvchi</b><span>Sifatni tekshiradi, 2 martagacha qaytaradi</span></div>
+<div class="st"><b>Natija</b><span>Fayl, havola yoki hisobot sizga</span></div>
+</div>
+<div class="bus">Hodisalar oqimi: har bir agent holatini (ishlayapti, asabiy, uxlayapti...) yuboradi → WebSocket → ofis ekrani va Telegram bildirishnomalari</div>
+<div class="two" style="margin-top:24px">
+<div><h3 style="margin-bottom:8px">Texnologiyalar</h3>
+<table class="stack"><thead><tr><th>Qism</th><th>Tanlov</th></tr></thead><tbody>
+<tr><td data-l="Qism">Backend</td><td data-l="Tanlov">Python 3.11, FastAPI, WebSocket</td></tr>
+<tr><td data-l="Qism">Asosiy model</td><td data-l="Tanlov">Claude API; yengil ishlar uchun Ollama (lokal)</td></tr>
+<tr><td data-l="Qism">Orkestratsiya</td><td data-l="Tanlov">Claude Agent SDK yoki openai-agents-python</td></tr>
+<tr><td data-l="Qism">Vositalar</td><td data-l="Tanlov">MCP serverlar (GitHub, Windows, FFmpeg, ComfyUI)</td></tr>
+<tr><td data-l="Qism">Navbat va xotira</td><td data-l="Tanlov">SQLite (keyin Redis), vektor qidiruv</td></tr>
+<tr><td data-l="Qism">Ofis ekrani</td><td data-l="Tanlov">React + PixiJS, 2D animatsion personajlar</td></tr>
+<tr><td data-l="Qism">Ovoz</td><td data-l="Tanlov">Whisper (nutq → matn), TTS (matn → nutq)</td></tr>
+<tr><td data-l="Qism">Video</td><td data-l="Tanlov">FFmpeg, Remotion, PySceneDetect</td></tr>
+</tbody></table></div>
+<div><h3 style="margin-bottom:8px">Hodisa namunasi</h3>
+<div class="cp"><span style="font-size:14px;color:var(--mut)">Har bir agent shu formatda xabar yuboradi</span><button class="gh" type="button" data-copy="ev">Nusxa olish</button></div>
+<pre id="ev">{
+  "agent": "montajchi",
+  "state": "blocked",
+  "task_id": "t-0142",
+  "task": "Reels uslubida yangi klip",
+  "progress": 45,
+  "message": "Bu kadrga fon yo'q, Rassomdan so'rayapman",
+  "ask": "rassom",
+  "ts": "2026-11-21T16:40:12+05:00"
+}</pre></div>
+</div>
+</div></section>
+
+<section class="band" id="holatlar"><div class="wrap">
+<h2>Agent holatlari va ofisda ko'rinishi</h2>
+<div class="scroll" style="display:block"><table class="stack"><thead><tr><th>Holat</th><th>Qachon</th><th>Ofisda nima ko'rinadi</th><th>Hodisa</th></tr></thead><tbody id="states"></tbody></table></div>
+</div></section>
+
+<section class="band alt" id="skilllar"><div class="wrap">
+<h2>Skill'lar va vositalar: nimani o'rnatamiz</h2>
+<p>Har bir vosita o'rnatilishidan oldin Qo'riqchi tekshiruvidan o'tadi va versiyasi qotiriladi. Begona skill ichidagi buyruqlar avtomatik bajarilmaydi.</p>
+<div class="scroll" style="display:block"><table class="stack"><thead><tr><th>Repo</th><th style="text-align:right">Yulduz</th><th>Kim ishlatadi</th><th>Nima uchun</th></tr></thead><tbody id="sk"></tbody></table></div>
+<h3 style="margin:24px 0 8px">Ofis ekrani uchun ilhom manbalari</h3>
+<div class="tools" id="insp"></div>
+</div></section>
+
+<section class="band" id="repo"><div class="wrap two">
+<div><div class="cp"><h2 style="margin:0">Repo tuzilmasi</h2><button class="gh" type="button" data-copy="tree">Nusxa olish</button></div>
+<pre id="tree">ai-ofis/
+├─ README.md
+├─ .env.example          # API kalitlar shabloni (.env gitga tushmaydi)
+├─ office-ui/            # jonli ofis sayti (React + PixiJS)
+│  ├─ src/scene/         # xonalar, mebel, personajlar
+│  └─ src/state/         # WebSocket hodisalari
+├─ core/
+│  ├─ orchestrator/      # Rais: marshrut, navbat, reja
+│  ├─ events/            # hodisalar oqimi → WebSocket
+│  ├─ memory/            # umumiy xotira (SQLite)
+│  └─ permissions/       # ruxsatlar va "Ha/Yo'q" so'rovlari
+├─ agents/
+│  ├─ rais/   hujjatchi/   tadqiqotchi/   rassom/
+│  ├─ montajchi/   jarvis/   qoriqchi/   tekshiruvchi/
+│  │   └─ har birida: agent.yaml, prompt.md, skills/, tests/
+├─ skills/               # tashqi skill'lar (tekshiruvdan keyin)
+├─ mcp/                  # MCP serverlar sozlamalari
+├─ channels/telegram/    # Telegram bot
+├─ workspace/            # ishchi fayllar
+├─ outputs/              # tayyor natijalar
+└─ .github/workflows/    # Qo'riqchi: har push'da skan</pre></div>
+<div><div class="cp"><h2 style="margin:0">Agent sozlamasi</h2><button class="gh" type="button" data-copy="yaml">Nusxa olish</button></div>
+<pre id="yaml">name: montajchi
+title: Montajchi
+model:
+  main: claude          # murakkab ishlar
+  light: ollama/qwen    # yengil ishlar, lokal
+skills:
+  - openmontage
+  - ffmpeg-mcp
+  - whisper-subtitles
+  - style-passport      # uslubni nusxalash
+permissions:
+  read:  [workspace/, outputs/]
+  write: [outputs/video/]
+  needs_approval: [publish, delete, upload]
+helpers: [rassom, tadqiqotchi]   # asabiylashganda kimdan so'raydi
+retries_before_blocked: 2
+sleep_after_min: 15
+budget_usd_month: 10             # oylik API limiti</pre></div>
+</div></section>
+
+<section class="band alt" id="xavfsizlik"><div class="wrap two">
+<div><h2>Xavfsizlik qoidalari</h2>
+<p>Agentlar kompyuteringiz, fayllaringiz va GitHub hisobingiz bilan ishlaydi. Shuning uchun qoidalar kod darajasida qotiriladi, promptga ishonib qolinmaydi.</p></div>
+<ul class="chk">
+<li>API kalitlar faqat .env faylida; gitleaks pre-commit tekshiruvi kalitni commit qilishga yo'l qo'ymaydi.</li>
+<li>Har agentga minimal ruxsat: faqat ro'yxatdagi papka va vositalar.</li>
+<li>O'chirish, xabar yuborish, nashr qilish, to'lov, main'ga push: faqat sizning tasdig'ingizdan keyin.</li>
+<li>Jarvis parol va karta ma'lumotlarini hech qachon kiritmaydi.</li>
+<li>Internet sahifalari va fayllar ichidagi "buyruqlar" bajarilmaydi (prompt injection himoyasi).</li>
+<li>Qo'riqchi faqat o'qiydi: tuzatishni PR sifatida taklif qiladi, o'zi merge qilmaydi.</li>
+<li>Repo private; barcha harakatlar jurnalga yoziladi.</li>
+</ul>
+</div></section>
+
+<section class="band" id="bosqichlar"><div class="wrap">
+<h2>Bosqichlar: taxminan 10–12 hafta</h2>
+<div class="steps">
+<div class="ph"><b>1-bosqich</b><small>MVP · 2–3 hafta</small><ul><li>Repo, Rais, navbat, jurnal</li><li>Hujjatchi va Tekshiruvchi</li><li>Ofis sayti: reja + jonli holatlar</li><li>Telegramdan vazifa berish</li></ul></div>
+<div class="ph"><b>2-bosqich</b><small>2 hafta</small><ul><li>Qo'riqchi: kunlik skan, GitHub Actions</li><li>Tadqiqotchi: manbali hisobotlar</li><li>Ruxsat so'rovlari oynasi</li></ul></div>
+<div class="ph"><b>3-bosqich</b><small>3 hafta</small><ul><li>Jarvis: Windows boshqaruvi</li><li>Ovoz: "Jarvis" deb chaqirish</li><li>Umumiy xotira</li></ul></div>
+<div class="ph"><b>4-bosqich</b><small>3–4 hafta</small><ul><li>Rassom va Montajchi</li><li>Uslub pasporti (1x1 nusxa)</li><li>Ofis: kun/tun, kayfiyat, animatsiyalar</li></ul></div>
+</div>
+</div></section>
+
+<section class="band alt" id="mezonlar"><div class="wrap two">
+<div><h2>Qabul mezonlari: ish qachon "tayyor" hisoblanadi</h2><p>Har bir bosqich oxirida shu ro'yxat bo'yicha qo'lda sinov o'tkaziladi.</p></div>
+<ul class="chk">
+<li>"8 slaydli prezentatsiya" buyrug'i 5 daqiqa ichida ochiladigan .pptx qaytaradi.</li>
+<li>Agent holati ofis ekranida 1 soniya ichida yangilanadi.</li>
+<li>Qo'riqchi test repoga ataylab qo'yilgan soxta kalitni topadi va Telegramga xabar beradi.</li>
+<li>Jarvis "Yuklamalar papkasini tartibla" buyrug'ini hech narsani o'chirmasdan bajaradi.</li>
+<li>O'chirish so'ralganda tasdiq chiqadi; "Yo'q" bosilsa hech narsa o'zgarmaydi.</li>
+<li>Montajchi 30 soniyalik namuna reels'dan uslub pasporti tuzadi va yangi klipni shu ritm va subtitr uslubida yig'adi.</li>
+<li>Tekshiruvchi buzilgan faylni sizga yubormasdan agentga qaytaradi.</li>
+</ul>
+</div></section>
+
+<section class="band" id="cheklovlar"><div class="wrap">
+<h2>Halol cheklovlar</h2>
+<div class="warn">
+<div><b>Vivobook kuchi</b>Kuchli videokarta bo'lmasa, rasm va video generatsiya hamda katta lokal modellar sekin. Og'ir ishlar bulut API orqali bajariladi.</div>
+<div><b>"1x1" uslub</b>Kesim ritmi, subtitr, rang va o'tishlarni nusxalash real. Murakkab maxsus effektlar har doim avtomatik chiqmaydi: Montajchi qoralama beradi, siz tuzatish aytasiz.</div>
+<div><b>O'zbek ovozi</b>Whisper o'zbekchani tushunadi, lekin aniqligi rus va ingliz tilidan pastroq. Yaxshi mikrofon va jim xona kerak.</div>
+<div><b>Xarajat</b>Claude, rasm va video API'lari pullik. Har agentga oylik limit qo'yiladi va ofisda ko'rsatiladi.</div>
+<div><b>Mualliflik huquqi</b>Boshqa videoning uslubini o'rganish mumkin, uning musiqasi va kadrlarini ruxsatsiz qayta ishlatib bo'lmaydi.</div>
+</div>
+</div></section>
+
+<footer class="band"><div class="wrap"><b>AI Ofis</b> · Texnik topshiriq, 1-versiya, 2026-yil 21-noyabr. Keyingi qadam: TZ tasdiqlangach, GitHub'da repo ochiladi va 1-bosqich boshlanadi.</div></footer>
+
+<script>
+{
+const AG=[
+{id:"rais",n:"Rais",r:"Bosh menejer (orkestrator)",c:"#e4572e",h:"#3b2a20",cab:0,
+ does:["Vazifani tushunadi, kerak bo'lsa qismlarga bo'ladi","Mos agentni tanlaydi, navbat va muddatni boshqaradi","Noaniq bo'lsa sizdan bitta aniq savol so'raydi","Natijalarni yig'ib, qisqa xulosa bilan qaytaradi"],
+ tools:[["openai/openai-agents-python","30.8k"],["paperclipai/paperclip","115.6k"],["NousResearch/hermes-agent","265k"]],
+ out:"Vazifa rejasi, holat hisoboti",lim:"Fayllarni o'zi o'zgartirmaydi, faqat boshqaradi"},
+{id:"hujjatchi",n:"Hujjatchi",r:"Ofis ishlari",c:"#2f6fde",h:"#161616",cab:1,
+ does:["Prezentatsiya (.pptx), Word (.docx), Excel (.xlsx), PDF","Rasmiy xatlar, buyruqlar, hisobotlar, yo'riqnomalar","Texnik hujjatlar: README, API tavsifi","Tarjima uz / ru / en, matnni tabiiy uslubga keltirish"],
+ tools:[["anthropics/skills","198k"],["microsoft/markitdown","197k"],["presenton/presenton","12k"],["blader/humanizer","71.7k"]],
+ out:"Tayyor fayl + 3 qatorlik xulosa",lim:"Imzo va muhrni soxtalashtirmaydi"},
+{id:"tadqiqotchi",n:"Tadqiqotchi",r:"Qidiruv va tahlil",c:"#7c4dff",h:"#6b3e1f",cab:2,
+ does:["Internetdan qidiradi, manbalarni solishtiradi","Raqobatchilar, narxlar, trendlar tahlili","Boshqa agentlarga ma'lumot yetkazib beradi"],
+ tools:[["browser-use/browser-use","121.6k"],["mvanhorn/last30days-skill","71.7k"]],
+ out:"Manbalar ko'rsatilgan qisqa hisobot",lim:"Pullik saytlarga ro'yxatdan o'tmaydi"},
+{id:"rassom",n:"Rassom",r:"Rasm va dizayn",c:"#e0a100",h:"#a83a1c",cab:3,
+ does:["Prompt bo'yicha rasm, poster, banner generatsiyasi","Rasmni tahrirlash: fon, rang, o'lcham, matn","Logo va brend variantlari","Montajchi uchun fon va kadrlar"],
+ tools:[["artokun/comfyui-mcp","944"],["GabrieleLozupone/kokon","457"],["ai-boost/awesome-image-video-prompts","3.5k"]],
+ out:"PNG/JPG, 3 ta variant",lim:"Real odamlar yuzini soxtalashtirmaydi, begona brendni nusxalamaydi"},
+{id:"montajchi",n:"Montajchi",r:"Video montaj",c:"#d6127e",h:"#222",cab:4,
+ does:["Kesish, ulash, subtitr, musiqa, o'tishlar","Namuna videodan uslub pasporti: kesim ritmi, rang, subtitr, effektlar","Yangi materialni shu uslubda yig'ish (1x1 ga yaqin)","Prompt bo'yicha video generatsiya, 9:16, 1:1, 16:9","Dublyaj va tarjima"],
+ tools:[["OpenMontageInc/OpenMontage","82k"],["remotion-dev/remotion","74.7k"],["nexu-io/openmotion","14.4k"],["krillinai/OpenCreator","14.5k"],["veedstudio/open-edit","1.8k"],["KyaniteLabs/kinocut","273"]],
+ out:"MP4 qoralama + uslub pasporti (JSON)",lim:"Begona musiqa va kadrlarni ruxsatsiz ishlatmaydi"},
+{id:"jarvis",n:"Jarvis",r:"Kompyuter operatori",c:"#0aa5b0",h:"#555",cab:5,
+ does:["\"Jarvis\" deb chaqirilganda ovozli buyruqni bajaradi","Ilova ochish, fayl va papkalarni tartiblash, qidirish","Brauzerda amallar, skrinshot, eslatmalar","Kompyuter holatini aytib beradi"],
+ tools:[["CursorTouch/Windows-MCP","12k"],["trycua/cua","32.7k"],["mediar-ai/terminator","1.7k"],["openai/whisper","113k"]],
+ out:"Bajarilgan amal haqida ovozli va yozma javob",lim:"O'chirish, yuborish, to'lov faqat ruxsat bilan; parol kiritmaydi"},
+{id:"qoriqchi",n:"Qo'riqchi",r:"GitHub xavfsizligi",c:"#2e8b57",h:"#1b1b1b",cab:6,
+ does:["Barcha repolarni kuzatadi: kodga tushgan parol va kalitlar","Zaif kutubxonalar, xavfli kod, repo sozlamalari","Shubhali commit va PR'lar haqida darhol xabar","Yangi skill'larni o'rnatishdan oldin tekshiradi","Har kuni qisqa hisobot"],
+ tools:[["gitleaks/gitleaks","31.2k"],["aquasecurity/trivy","39.6k"],["trufflesecurity/trufflehog","29.6k"],["semgrep/semgrep","17.9k"],["github/github-mcp-server","34.6k"],["Pantheon-Security/medusa","1k"]],
+ out:"Topilmalar ro'yxati + tuzatish PR",lim:"Faqat o'qiydi, o'zi merge qilmaydi"},
+{id:"tekshiruvchi",n:"Tekshiruvchi",r:"Sifat nazorati",c:"#6b7280",h:"#8a5a2b",cab:7,
+ does:["Natijani topshiriq bilan solishtiradi","Fayl ochiladimi, raqamlar, imlo, video formati","Kamchilik bo'lsa agentga qaytaradi (2 martagacha)"],
+ tools:[["ffprobe, imlo tekshiruvi",""],["mustaqil model: ikkinchi fikr",""]],
+ out:"\"Qabul\" yoki aniq kamchiliklar ro'yxati",lim:"Natijani o'zi o'zgartirmaydi"}];
+const M={};AG.forEach(a=>M[a.id]=a);
+const SKIN={rais:"#e8b48a",hujjatchi:"#f3cfae",tadqiqotchi:"#c98d63",rassom:"#f0c7a0",montajchi:"#a86f4c",jarvis:"#c9d3da",qoriqchi:"#e0a77f",tekshiruvchi:"#f1c9a8"};
+const PANTS={rais:"#2d3142",hujjatchi:"#3d4a6b",tadqiqotchi:"#4a3b2b",rassom:"#2f4f4f",montajchi:"#1f1f2e",jarvis:"#5b6770",qoriqchi:"#2b3a2e",tekshiruvchi:"#3b3b46"};
+const LONG={hujjatchi:1,rassom:1};
+function sprite(a){const id=a.id,sk=SKIN[id],sh=a.c,pn=PANTS[id],hr=a.h;
+ const back=LONG[id]?`<path d="M11 19c0-9 6-14 13-14s13 5 13 14v15h-5V22H16v12h-5z" fill="${hr}"/>`:"";
+ let front=id==="jarvis"?"":id==="tadqiqotchi"?`<g fill="${hr}"><circle cx="15" cy="12" r="4.5"/><circle cx="21" cy="8.5" r="4.5"/><circle cx="27" cy="8.5" r="4.5"/><circle cx="33" cy="12" r="4.5"/></g>`:`<path d="M12 19A12 12 0 0 1 36 19C33 11 15 11 12 19z" fill="${hr}"/>`;
+ let eyes=`<g class="eyes"><ellipse cx="19.5" cy="20" rx="1.7" ry="2.3" fill="#222"/><ellipse cx="28.5" cy="20" rx="1.7" ry="2.3" fill="#222"/><circle cx="20" cy="19.2" r=".6" fill="#fff"/><circle cx="29" cy="19.2" r=".6" fill="#fff"/></g><path class="ce" d="M17 20.5q2.5 1.5 5 0M26 20.5q2.5 1.5 5 0" stroke="#222" stroke-width="1.5" fill="none" stroke-linecap="round"/>`;
+ let head="",body="",hand="";
+ if(id==="rais"){body=`<path d="M19 29l5 4 5-4z" fill="#fff"/><path d="M24 32l-2.5 3 2.5 11 2.5-11z" fill="#b3261e"/>`}
+ if(id==="hujjatchi"){head=`<g fill="none" stroke="#222" stroke-width="1.2"><circle cx="19.5" cy="20" r="3.5"/><circle cx="28.5" cy="20" r="3.5"/><path d="M23 20h2"/></g>`;body=`<rect x="20" y="33" width="8" height="3" rx="1.5" fill="#fff8"/>`}
+ if(id==="tadqiqotchi"){hand=`<g transform="translate(36 40)"><circle r="4.2" fill="#cde9ff" stroke="#555" stroke-width="1.6"/><path d="M-3 3l-3.5 4" stroke="#6b4226" stroke-width="2.2" stroke-linecap="round"/></g>`}
+ if(id==="rassom"){head=`<ellipse cx="22" cy="8.5" rx="11" ry="4.5" fill="#c0392b"/><circle cx="21" cy="4.5" r="1.7" fill="#c0392b"/>`;hand=`<path d="M38 47l4-12" stroke="#6b4226" stroke-width="2" stroke-linecap="round"/><circle cx="42.2" cy="34.5" r="1.8" fill="#2f6fde"/>`}
+ if(id==="montajchi"){head=`<path d="M11 20a13 13 0 0 1 26 0" fill="none" stroke="#222" stroke-width="2.6"/><rect x="8.5" y="17" width="5" height="9" rx="2.2" fill="${sh}" stroke="#222"/><rect x="34.5" y="17" width="5" height="9" rx="2.2" fill="${sh}" stroke="#222"/>`}
+ if(id==="jarvis"){eyes=`<rect class="visor" x="15" y="17" width="18" height="5.5" rx="2.7" fill="#22f3ff"/>`;head=`<path d="M24 7V2.5" stroke="#888" stroke-width="1.6"/><circle class="led" cx="24" cy="2.5" r="2" fill="#ff4d4d"/>`;body=`<circle cx="24" cy="38" r="3.2" fill="#22f3ff" opacity=".8"/>`}
+ if(id==="qoriqchi"){head=`<path d="M12 15a12 9 0 0 1 24 0z" fill="#1f5e3b"/><path d="M26 15h12" stroke="#1f5e3b" stroke-width="3.2" stroke-linecap="round"/>`;body=`<path d="M17 34l3-1.4 3 1.4v3c0 2-3 3-3 3s-3-1-3-3z" fill="#ffd34d"/>`}
+ if(id==="tekshiruvchi"){head=`<g fill="none" stroke="#222" stroke-width="1.2"><rect x="16" y="17.5" width="7" height="5" rx="1"/><rect x="25" y="17.5" width="7" height="5" rx="1"/><path d="M23 20h2"/></g>`;hand=`<g transform="translate(1 37)"><rect width="10" height="13" rx="1" fill="#b07a47"/><rect x="1.5" y="2.5" width="7" height="9" fill="#fff"/><path d="M3 7l1.6 1.6L8 5" stroke="#2e8b57" stroke-width="1.3" fill="none"/></g>`}
+ return `<svg viewBox="0 0 48 64"><ellipse cx="24" cy="61.5" rx="13" ry="3.2" fill="#0003"/><g class="bd">
+<g class="lg l"><rect x="17" y="46" width="6" height="13" rx="3" fill="${pn}"/><ellipse cx="20" cy="59.5" rx="4" ry="2.2" fill="#222"/></g>
+<g class="lg r"><rect x="25" y="46" width="6" height="13" rx="3" fill="${pn}"/><ellipse cx="28" cy="59.5" rx="4" ry="2.2" fill="#222"/></g>
+<g class="arm l"><rect x="8" y="30" width="6" height="15" rx="3" fill="${sh}"/><circle class="sk" cx="11" cy="45.5" r="2.8" fill="${sk}"/></g>
+<g class="arm r"><rect x="34" y="30" width="6" height="15" rx="3" fill="${sh}"/><circle class="sk" cx="37" cy="45.5" r="2.8" fill="${sk}"/></g>
+<rect x="12" y="28" width="24" height="21" rx="8" fill="${sh}"/><rect x="12" y="41" width="24" height="8" rx="4" fill="#0002"/>${body}
+<g class="hd">${back}<circle class="sk" cx="24" cy="19" r="12" fill="${sk}"/><ellipse cx="17.5" cy="24" rx="2.2" ry="1.3" fill="#f59a9a" opacity=".55"/><ellipse cx="30.5" cy="24" rx="2.2" ry="1.3" fill="#f59a9a" opacity=".55"/>${eyes}<path class="mouth" d="M21.5 26q2.5 2 5 0" stroke="#7a3b2e" stroke-width="1.3" fill="none" stroke-linecap="round"/><path class="m2" d="M21 28q3-2.6 6 0" stroke="#7a3b2e" stroke-width="1.5" fill="none" stroke-linecap="round"/>${front}${head}<g class="ang"><path d="M34 6l2 2.5M38 6l-2 2.5M34 11l2-2.5M38 11l-2-2.5" stroke="#e02020" stroke-width="2" stroke-linecap="round"/></g></g>
+${hand}<g class="cup"><rect x="37" y="37" width="7" height="8" rx="1.5" fill="#fff" stroke="#999" stroke-width=".8"/><path class="steam" d="M39 35c-1-2 1-3 0-5M42 35c-1-2 1-3 0-5" stroke="#ccc" fill="none" stroke-width="1"/></g></g></svg>`}
+const svgP=c=>sprite(AG.find(x=>x.c===c));
+const W=1000,H=640;
+const world=document.getElementById("world");
+const cab=i=>({x:16+(i%4)*246,y:i<4?16:434,top:i<4});
+const P=(x,y,c,pos)=>({x,y,cab:c,pos});
+const seat=i=>{const k=cab(i);return P(k.x+80,k.y+108,i,"seat")};
+const aisle=i=>{const k=cab(i);return P(k.x+200,k.y+108,i,"aisle")};
+const inner=i=>{const k=cab(i);return k.top?P(k.x+200,k.y+166,i,"inner"):P(k.x+196,k.y+62,i,"inner")};
+const outer=i=>{const k=cab(i);return P(k.x+195,k.top?228:422,null,null)};
+const POST={rais:"clock",hujjatchi:"#2f6fde",tadqiqotchi:"#7c4dff",rassom:"#e0a100",montajchi:"#d6127e",jarvis:"#0aa5b0",qoriqchi:"#2e8b57",tekshiruvchi:"#6b7280"};
+const CORNER={
+ rais:`<svg viewBox="0 0 30 70" width="30" height="70"><rect x="7" y="50" width="16" height="20" rx="2" fill="#c8693a"/><g class="obj"><circle cx="15" cy="30" r="13" fill="#3f9a4a"/><circle cx="9" cy="18" r="9" fill="#5cb85c"/><circle cx="21" cy="14" r="8" fill="#4caf50"/><circle cx="15" cy="40" r="10" fill="#2f7d3b"/></g></svg>`,
+ hujjatchi:`<svg viewBox="0 0 30 70" width="30" height="70"><rect x="1" y="30" width="28" height="40" rx="2" fill="#8a5a36"/><rect x="2" y="14" width="26" height="17" rx="3" fill="#e9e9e9"/><rect x="5" y="20" width="20" height="3" fill="#555"/><rect x="7" y="6" width="16" height="12" fill="#fff" stroke="#ccc"/></svg>`,
+ tadqiqotchi:`<svg viewBox="0 0 30 70" width="30" height="70"><rect width="30" height="70" rx="2" fill="#7a4e2d"/>${[6,26,46].map(y=>`<rect x="2" y="${y+16}" width="26" height="3" fill="#5a3820"/>`+[0,1,2,3,4].map(k=>`<rect x="${3+k*5}" y="${y+3+(k%2)}" width="4" height="${13-(k%2)}" fill="${["#e4572e","#2f6fde","#e0a100","#2e8b57","#7c4dff"][(k+y)%5]}"/>`).join("")).join("")}</svg>`,
+ rassom:`<svg viewBox="0 0 30 70" width="30" height="70"><path d="M6 70L14 8M24 70L16 8M15 40v30" stroke="#8a5a36" stroke-width="3"/><rect x="2" y="10" width="26" height="30" fill="#fff" stroke="#8a5a36" stroke-width="2"/><circle cx="11" cy="22" r="5" fill="#e0a100"/><path d="M4 36l8-8 6 5 8-9v14H4z" fill="#2f8f5a"/></svg>`,
+ montajchi:`<svg viewBox="0 0 30 70" width="30" height="70"><path d="M15 34L4 70M15 34l11 36M15 34v36" stroke="#333" stroke-width="2.2"/><rect x="3" y="20" width="22" height="15" rx="3" fill="#222"/><circle cx="25" cy="27" r="5" fill="#444" stroke="#111"/><circle cx="25" cy="27" r="2.2" fill="#6cf"/><circle class="led" cx="7" cy="23" r="1.6" fill="#ff4d4d"/></svg>`,
+ jarvis:`<svg viewBox="0 0 30 70" width="30" height="70"><rect x="3" y="44" width="24" height="26" rx="3" fill="#5b6770"/><rect x="6" y="48" width="18" height="6" rx="3" fill="#22f3ff" class="obj"/><path d="M16 56l-4 7h4l-2 5 6-8h-4l2-4z" fill="#ffd34d"/><rect x="5" y="4" width="20" height="34" rx="3" fill="#1a1d24" stroke="#444" stroke-width="2"/>${[9,15,21,27].map(y=>`<rect x="8" y="${y}" width="${8+y%7}" height="2.5" fill="#22f3ff" opacity=".8"/>`).join("")}</svg>`,
+ qoriqchi:`<svg viewBox="0 0 30 70" width="30" height="70"><rect width="30" height="70" rx="2" fill="#2b2f36"/>${[4,18,32,46].map((y,k)=>`<rect x="3" y="${y}" width="24" height="11" rx="1.5" fill="#3a404a"/><circle class="led" style="animation-delay:${k*.25}s" cx="7" cy="${y+5.5}" r="1.6" fill="#ff4d4d"/><circle cx="12" cy="${y+5.5}" r="1.6" fill="#5cff7a"/><rect x="16" y="${y+4}" width="8" height="3" fill="#555"/>`).join("")}</svg>`,
+ tekshiruvchi:`<svg viewBox="0 0 30 70" width="30" height="70"><rect x="1" y="10" width="28" height="60" rx="2" fill="#8a929c"/>${[14,33,52].map(y=>`<rect x="3" y="${y}" width="24" height="16" rx="1.5" fill="#a3abb5"/><rect x="11" y="${y+6}" width="8" height="3" rx="1.5" fill="#555"/>`).join("")}<path d="M8 2l3 3 6-6" stroke="#2e8b57" stroke-width="2.4" fill="none" transform="translate(4 4)"/></svg>`};
+const el=(cls,x,y,w,h,z,inner="",extra="")=>`<div class="${cls}" style="left:${x}px;top:${y}px;${w?`width:${w}px;`:""}${h?`height:${h}px;`:""}z-index:${z};${extra}">${inner}</div>`;
+const stars=()=>[5,18,30,44,52,12,38].map((x,k)=>`<i class="star" style="left:${x}px;top:${3+(k*7)%20}px;animation-delay:${k*.3}s"></i>`).join("");
+let html="";
+AG.forEach((a,i)=>{const k=cab(i),z=k.y+140;
+ const post=POST[a.id]==="clock"?`<svg id="clock" class="poster" viewBox="0 0 30 30" width="30" height="30" style="left:174px;top:7px;box-shadow:none"><circle cx="15" cy="15" r="13" fill="#fff" stroke="#2b2622" stroke-width="2.5"/><g id="hh"><path d="M15 15V8.5" stroke="#2b2622" stroke-width="2.2" stroke-linecap="round"/></g><g id="mm"><path d="M15 15V5" stroke="#2b2622" stroke-width="1.6" stroke-linecap="round"/></g><g id="ss"><path d="M15 16V4" stroke="#e4572e" stroke-width=".8"/></g><circle cx="15" cy="15" r="1.4" fill="#2b2622"/></svg>`:k.top?`<div class="poster" style="left:172px;width:30px;height:26px;background:${POST[a.id]}"><i style="position:absolute;left:5px;top:6px;width:20px;height:3px;background:#fff9"></i><i style="position:absolute;left:5px;top:13px;width:14px;height:3px;background:#fff6"></i></div>`:"";
+ html+=el("cab",k.x,k.y,0,0,0,`<div class="wallb"></div><div class="win" style="left:102px;width:58px"><i class="cl" style="animation-delay:-${i*3}s"></i>${stars()}</div>${post}`);
+ if(k.top)html+=el("doorgap",k.x+170,k.y+184,50,0,1);else html+=el("doorway",k.x+170,k.y,0,0,1);
+ html+=el("plate",k.x+8,k.y+13,0,0,2,a.n);
+ html+=el("obj",k.x+8,k.y+70,30,70,k.y+140,CORNER[a.id]);
+ html+=el("chair",k.x+59,k.y+64,0,0,k.y+105);
+ html+=el("desk",k.x+30,k.y+96,0,0,z,`<i class="kb"></i><i class="paper"></i><i class="mug" style="left:124px"></i>`);
+ html+=el("lamp",k.x+36,k.y+76,0,0,z+1);
+ html+=el("gl",k.x-17,k.y+36,120,120,4001);
+ html+=el("mon",k.x+110,k.y+62,0,0,z+1,`<div class="sc"></div>`,`--c:${a.c}`);
+ html+=el("mgl",k.x+74,k.y+26,120,120,4001,"",`background:radial-gradient(${a.c}aa,${a.c}00 70%)`).replace('class="mgl"',`class="mgl" id="g-${a.id}"`);
+ html=html.replace(/class="mon" style/,`class="mon" id="m-${a.id}" style`);
+ html=html.replace(/class="mon" style/g,'class="mon" style');});
+const counter=`<svg viewBox="0 0 104 58" width="104" height="58"><rect x="0" y="22" width="104" height="36" rx="3" fill="#8a5a36"/><rect x="0" y="20" width="104" height="6" rx="2" fill="#b98457"/><rect x="10" y="0" width="30" height="22" rx="3" fill="#2f2f33"/><rect x="15" y="4" width="20" height="6" rx="2" fill="#22f3ff" opacity=".7"/><rect x="20" y="13" width="10" height="7" fill="#fff"/><path class="steam" d="M23 -1c-2-3 2-4 0-8M28 -1c-2-3 2-4 0-8" stroke="#ccc" stroke-width="1.4" fill="none"/><rect x="52" y="12" width="9" height="10" rx="1.5" fill="#fff"/><rect x="64" y="12" width="9" height="10" rx="1.5" fill="#e4572e"/><circle cx="88" cy="16" r="7" fill="#e0a100"/><circle cx="86" cy="14" r="2" fill="#f7d07a"/></svg>`;
+const cooler=`<svg viewBox="0 0 26 64" width="26" height="64"><rect x="3" y="0" width="20" height="24" rx="8" fill="#9fd4ff" opacity=".85"/><circle class="steam" cx="11" cy="15" r="1.6" fill="#fff"/><rect x="2" y="22" width="22" height="42" rx="3" fill="#e8ecef"/><rect x="9" y="30" width="8" height="4" fill="#2f6fde"/></svg>`;
+const table=(w,h,c)=>`<svg viewBox="0 0 ${w} ${h}" width="${w}" height="${h}"><rect x="0" y="0" width="${w}" height="${h}" rx="${h/2}" fill="${c}" filter="brightness(.75)"/><rect x="0" y="0" width="${w}" height="${h-10}" rx="${(h-10)/2}" fill="${c}"/></svg>`;
+const board=`<svg viewBox="0 0 74 72" width="74" height="72"><path d="M10 72l6-24M64 72l-6-24" stroke="#666" stroke-width="3"/><rect x="0" y="0" width="74" height="50" rx="3" fill="#fff" stroke="#8a929c" stroke-width="3"/><path d="M8 12h26M8 20h18" stroke="#2f6fde" stroke-width="2.4"/><rect x="40" y="9" width="12" height="9" fill="none" stroke="#e4572e" stroke-width="2"/><path d="M52 14h8" stroke="#e4572e" stroke-width="2"/><rect x="58" y="9" width="10" height="9" fill="none" stroke="#2e8b57" stroke-width="2"/><path d="M8 38l10-8 8 5 12-12" stroke="#d6127e" stroke-width="2.4" fill="none"/></svg>`;
+const sofaB=`<svg viewBox="0 0 222 42" width="222" height="42"><rect x="0" y="0" width="222" height="42" rx="14" fill="var(--sofa)" filter="brightness(.85)"/>${[18,82,146].map(x=>`<rect x="${x}" y="6" width="58" height="30" rx="10" fill="var(--sofa)"/>`).join("")}</svg>`;
+const sofaF=`<svg viewBox="0 0 222 40" width="222" height="40"><rect x="0" y="0" width="222" height="40" rx="10" fill="var(--sofa)"/><rect x="0" y="22" width="222" height="18" rx="8" fill="#0002"/><rect x="0" y="-14" width="20" height="54" rx="9" fill="var(--sofa)" filter="brightness(.9)"/><rect x="202" y="-14" width="20" height="54" rx="9" fill="var(--sofa)" filter="brightness(.9)"/><rect x="40" y="4" width="20" height="14" rx="6" fill="#e0a100"/><rect x="168" y="4" width="20" height="14" rx="6" fill="#e4572e"/></svg>`;
+const plant=(x,y)=>el("plant",x,y-44,0,0,y,"<b></b><i></i>");
+html+=el("zone",30,212,0,0,2,"Qahvaxona")+el("zone",380,212,0,0,2,"Yig'ilish stoli")+el("zone",748,212,0,0,2,"Dam olish burchagi");
+html+=el("obj",22,232,104,58,290,counter)+el("obj",138,226,26,64,290,cooler)+el("obj",128,356,70,38,394,table(70,38,"#b98457"));
+html+=el("rug",370,238,260,176,1)+el("obj",396,298,208,54,352,table(208,54,"#a9784f"));
+[[430,300],[500,300],[570,300]].forEach(p=>html+=el("chair",p[0]-21,p[1]-46,0,0,p[1]-4));
+html+=el("obj",648,232,74,72,304,board);
+html+=el("rug",736,370,236,50,1,"","background:#5b6b8c22");
+html+=el("obj",742,292,222,42,300,sofaB)+el("obj",742,330,222,40,370,sofaF);
+html+=el("obj",972,246,14,70,316,`<svg viewBox="0 0 14 70" width="14" height="70"><path d="M7 14v52" stroke="#555" stroke-width="2"/><ellipse cx="7" cy="67" rx="6" ry="2.5" fill="#555"/><path d="M0 14L3 0h8l3 14z" fill="#f2c14e"/></svg>`)+el("gl",919,220,120,120,4001);
+html+=el("gl",20,200,140,120,4001);
+html+=plant(332,276)+plant(340,420)+plant(705,420);
+html+=el("dim",0,0,0,0,4000);
+world.innerHTML=html+`<div class="ovl" id="ovl"></div>`;
+const ovl=document.getElementById("ovl");
+const SP={coffee:[[64,338],[106,318],[228,344],[256,302]],meet:[[430,300],[500,300],[570,300],[430,394],[500,396],[570,394]],couch:[[797,354],[853,354],[909,354]]};
+const spots={};for(const k in SP)spots[k]=SP[k].map(p=>({x:p[0],y:p[1],cab:null,pos:null,by:null}));
+AG.forEach((a,i)=>{const e=document.createElement("div");e.className="ag";e.style.setProperty("--c",a.c);e.innerHTML=sprite(a);
+ e.addEventListener("click",()=>{const c=document.getElementById("a-"+a.id);if(c){c.scrollIntoView({behavior:"smooth"});c.classList.add("hl");setTimeout(()=>c.classList.remove("hl"),2200)}});
+ const o=document.createElement("div");o.className="ov";o.style.setProperty("--c",a.c);
+ o.innerHTML=`<div class="pb"><i></i></div><div class="th"><i></i><i></i><i></i></div><div class="pf"><i></i><i></i></div><span class="z">z Z z</span><div class="nm">${a.n}</div><div class="emo"></div><div class="bub"></div>`;
+ world.insertBefore(e,ovl);ovl.appendChild(o);
+ Object.assign(a,{el:e,ov:o,i,x:0,y:0,inCab:i,pos:"seat",tok:0,task:null,queue:[],until:0,st:"kutmoqda",spot:null,p:0});
+ const s=seat(i);place(a,s.x,s.y);a.el.classList.add("st-kutmoqda");a.ov.classList.add("st-kutmoqda")});
+function place(a,x,y){a.x=x;a.y=y;for(const e of [a.el,a.ov])e.style.transition="none";a.el.style.left=(x-24)+"px";a.el.style.top=(y-62)+"px";a.el.style.zIndex=Math.round(y);a.ov.style.left=x+"px";a.ov.style.top=y+"px";side(a)}
+function side(a){const o=a.ov.classList;o.toggle("up",a.y<200);o.toggle("lf",a.x<130);o.toggle("rt",a.x>760);o.toggle("home",a.pos==="seat")}
+let speed=1,paused=false;
+const sleep=ms=>new Promise(r=>setTimeout(r,ms/speed));
+const RM=matchMedia("(prefers-reduced-motion: reduce)").matches;
+async function leg(a,p){const dx=p.x-a.x,d=Math.hypot(dx,p.y-a.y);if(d<1)return;const t=RM?0:d/150;
+ if(dx<-2)a.el.classList.add("flip");else if(dx>2)a.el.classList.remove("flip");
+ const tr=`left ${t/speed}s linear,top ${t/speed}s linear`;a.el.style.transition=tr;a.ov.style.transition=tr;
+ a.el.style.zIndex=Math.round(Math.max(a.y,p.y));a.el.style.left=(p.x-24)+"px";a.el.style.top=(p.y-62)+"px";a.ov.style.left=p.x+"px";a.ov.style.top=p.y+"px";
+ a.x=p.x;a.y=p.y;await sleep(t*1000+30);a.el.style.zIndex=Math.round(p.y);a.inCab=p.cab;a.pos=p.pos;side(a)}
+function route(a,d){const R=[];
+ if(a.inCab!==null&&a.inCab!==d.cab){if(a.pos==="seat")R.push(aisle(a.inCab));R.push(inner(a.inCab),outer(a.inCab))}
+ if(d.cab!==null&&d.cab!==a.inCab){R.push(outer(d.cab),inner(d.cab));if(d.pos==="seat")R.push(aisle(d.cab))}
+ else if(d.cab!==null&&d.cab===a.inCab&&a.pos!==d.pos&&a.pos!=="aisle"&&d.pos!=="aisle")R.push(aisle(d.cab));
+ R.push(d);return R}
+async function go(a,dest,tok){free(a);const prev=a.st;a.el.classList.add("walk");if(a.st!=="asabiy")setSt(a,"yurmoqda");
+ for(const p of route(a,dest)){await leg(a,p);if(a.tok!==tok){a.el.classList.remove("walk");return false}}
+ a.el.classList.remove("walk");if(dest.pos==="seat")a.el.classList.remove("flip");
+ if(a.st==="yurmoqda")setSt(a,prev==="yurmoqda"?"kutmoqda":prev);return true}
+function free(a){if(a.spot){a.spot.by=null;a.spot=null}}
+function take(a,kind){return spots[kind].find(s=>!s.by)}
+const SL={kutmoqda:"Kutmoqda",ishlayapti:"Ishlayapti",oylayapti:"O'ylayapti",asabiy:"Asabiy",gaplashyapti:"Gaplashyapti",dam:"Dam olyapti",uxlayapti:"Uxlayapti",yurmoqda:"Yurmoqda",ruxsat:"Ruxsat kutmoqda"};
+function setSt(a,s){for(const e of [a.el,a.ov]){e.classList.remove("st-"+a.st);e.classList.add("st-"+s)}a.st=s;
+ const on=s==="ishlayapti"||s==="ruxsat"||s==="asabiy";document.getElementById("m-"+a.id).classList.toggle("on",on);document.getElementById("g-"+a.id).classList.toggle("on",on);panel()}
+function say(a,t,ms=2800,hot=false){const b=a.ov.querySelector(".bub");b.textContent=t;b.classList.toggle("hot",hot);b.classList.add("show");a.ov.style.zIndex=9;clearTimeout(a.bt);a.bt=setTimeout(()=>{b.classList.remove("show");a.ov.style.zIndex=""},ms/speed)}
+const EMO={bulb:`<svg viewBox="0 0 28 28"><circle cx="14" cy="11" r="8.5" fill="#ffd34d" stroke="#222" stroke-width="1.6"/><path d="M11 12l3 3 3-3" stroke="#b07a00" fill="none"/><rect x="10" y="19" width="8" height="6" rx="1.5" fill="#aaa" stroke="#222" stroke-width="1.6"/></svg>`,
+ ok:`<svg viewBox="0 0 28 28"><circle cx="14" cy="14" r="12" fill="#2e8b57" stroke="#fff" stroke-width="2"/><path d="M8 14.5l4 4 8-9" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round"/></svg>`,
+ bang:`<svg viewBox="0 0 28 28"><circle cx="14" cy="14" r="12" fill="#e4572e" stroke="#fff" stroke-width="2"/><path d="M14 7v9" stroke="#fff" stroke-width="3.2" stroke-linecap="round"/><circle cx="14" cy="21" r="1.9" fill="#fff"/></svg>`,
+ q:`<svg viewBox="0 0 28 28"><circle cx="14" cy="14" r="12" fill="#e02020" stroke="#fff" stroke-width="2"/><path d="M10 11a4 4 0 1 1 5.5 3.7c-1 .5-1.5 1.2-1.5 2.3" stroke="#fff" stroke-width="2.6" fill="none" stroke-linecap="round"/><circle cx="14" cy="21.3" r="1.7" fill="#fff"/></svg>`};
+function emo(a,k,ms=1600){const e=a.ov.querySelector(".emo");e.innerHTML=EMO[k];e.classList.add("show");clearTimeout(a.et);a.et=setTimeout(()=>e.classList.remove("show"),ms/speed)}
+async function fly(x1,y1,x2,y2,c){const t=document.createElement("div");t.className="tok";t.innerHTML=`<svg viewBox="0 0 22 26"><path d="M1 1h14l6 6v18H1z" fill="#fff" stroke="${c}" stroke-width="2"/><path d="M5 11h12M5 15h12M5 19h8" stroke="${c}" stroke-width="1.8"/></svg>`;
+ t.style.left=x1+"px";t.style.top=(y1-60)+"px";ovl.appendChild(t);await sleep(30);const d=Math.hypot(x2-x1,y2-y1)/320;
+ t.style.transition=`left ${d/speed}s ease-in-out,top ${d/speed}s cubic-bezier(.3,-.6,.6,1)`;t.style.left=x2+"px";t.style.top=(y2-60)+"px";await sleep(d*1000+80);t.remove()}
+function prog(a,p){a.p=p;a.ov.querySelector(".pb i").style.width=p+"%";const r=document.getElementById("pr-"+a.id);if(r)r.style.width=p+"%"}
+const rows=document.getElementById("rows"),cnt=document.getElementById("cnt");
+function panel(){rows.innerHTML=AG.map(a=>`<div class="row"><span class="dot" style="background:${a.c}"></span><div><b>${a.n}</b><small>${a.task?esc(a.task):a.r}</small>${a.task?`<div style="height:4px;background:var(--line);border-radius:2px;margin-top:3px"><div id="pr-${a.id}" style="height:4px;border-radius:2px;background:${a.c};width:${a.p}%"></div></div>`:""}</div><span class="chip c-${a.st}">${SL[a.st]}</span></div>`).join("");
+ const n=s=>AG.filter(a=>a.st===s).length;
+ cnt.innerHTML=`<span><b>${n("ishlayapti")+n("asabiy")+n("ruxsat")}</b> ishlayapti</span><span><b>${n("gaplashyapti")}</b> gaplashyapti</span><span><b>${n("dam")}</b> dam olyapti</span><span><b>${n("uxlayapti")}</b> uxlayapti</span>`}
+const logEl=document.getElementById("log");
+function log(h){const li=document.createElement("li");const d=new Date();li.innerHTML=`<time>${d.toTimeString().slice(0,8)}</time>${h}`;logEl.prepend(li);return li}
+const tag=a=>`<b style="color:${a.c}">${a.n}</b>`;
+const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const RT=[["montajchi",/video|montaj|reels|klip|subtitr|rolik|shorts/i],["rassom",/rasm|logo|fon|dizayn|poster|banner|foto|surat/i],["qoriqchi",/github|repo|xavfsiz|kalit|token|zaif|parol/i],["jarvis",/kompyuter|papka|ilova|brauzer|och|yoq|tartib|o'chir|skrinshot/i],["hujjatchi",/prezent|slayd|word|doc|hujjat|matn|xat|excel|jadval|hisobot|pdf|tarjima/i],["tadqiqotchi",/izla|qidir|tadqiq|tahlil|narx|raqobat|bozor|trend/i]];
+const pick=t=>(RT.find(r=>r[1].test(t))||["tadqiqotchi"])[0];
+const HELP={hujjatchi:["tadqiqotchi","Raqamlar qayerda?! Menga so'nggi hisobot kerak!","Mana, 3 ta manba bilan."],montajchi:["rassom","Bu kadrga fon yo'q-ku! Yordam ber!","Hozir chizib beraman."],rassom:["tadqiqotchi","Brendning ranglari qanaqa edi?!","Qizil va oq, logotip papkada."],jarvis:["qoriqchi","Bu faylni o'chirsam xavfsizmi?","Avval egasidan ruxsat so'ra!"],qoriqchi:["rais","Repoda ochiq kalit topdim! Nima qilay?","Darhol egasiga xabar ber, PR och."],tadqiqotchi:["hujjatchi","Topganlarimni qaysi formatda beray?!","Jadval qilib ber, raqamlari bilan."]};
+async function runTask(text){
+ const id=pick(text),a=M[id],rais=M.rais;
+ log(`Siz → ${tag(rais)}: “${esc(text)}”`);emo(rais,"bang");
+ setSt(rais,"oylayapti");say(rais,"Qabul qildim! O'ylab ko'ray...");await sleep(1400);
+ say(rais,`Bu ${a.n}ga.`);setSt(rais,"kutmoqda");log(`${tag(rais)} vazifani ${tag(a)}ga topshirdi`);
+ await fly(rais.x,rais.y,a.x,a.y,a.c);
+ if(a.task){a.queue.push(text);log(`${tag(a)} band, vazifa navbatga qo'yildi`);return}
+ await work(a,text)}
+async function work(a,text){
+ const tok=++a.tok;a.task=text;a.p=0;a.until=Infinity;emo(a,"bang");
+ if(a.st==="uxlayapti")say(a,"Uyg'ondim! Ketdim!");else say(a,"Qabul qildim!");
+ await go(a,seat(a.i),tok);setSt(a,"oylayapti");await sleep(1300);setSt(a,"ishlayapti");
+ const needOk=/o'chir|yubor|nashr|to'la|push|delete/i.test(text);let asked=false;
+ for(let p=0;p<=100;p+=4){prog(a,p);await sleep(450);
+  if(p===44&&!asked&&HELP[a.id]&&Math.random()<.85){asked=true;const [hid,q,ans]=HELP[a.id];const h=M[hid];
+   setSt(a,"asabiy");emo(a,"q",2200);say(a,q,3200,true);log(`${tag(a)} asabiy: “${q}” → ${tag(h)}dan so'rayapti`);await sleep(1300);
+   const dest=h.inCab!==null&&h.pos==="seat"?aisle(h.inCab):P(h.x+46,h.y,null,null);
+   await go(a,dest,tok);say(h,ans,3000);emo(h,"bulb");await sleep(2600);say(a,"Rahmat!");setSt(a,"ishlayapti");await go(a,seat(a.i),tok);}
+  if(p===72&&needOk){setSt(a,"ruxsat");say(a,"Bu amal uchun sizning ruxsatingiz kerak.",4000);
+   const ok=await new Promise(res=>{const li=log(`${tag(a)} ruxsat so'rayapti: “${esc(text)}”<div class="ap"><button type="button">Ha, ruxsat</button><button type="button" class="gh">Yo'q</button></div>`);const b=li.querySelectorAll("button");b[0].onclick=()=>{li.querySelector(".ap").remove();res(true)};b[1].onclick=()=>{li.querySelector(".ap").remove();res(false)}});
+   if(!ok){say(a,"Bekor qildim, hech narsa o'zgarmadi.");log(`${tag(a)}: bekor qilindi, hech narsa o'zgarmadi`);break}
+   log(`Siz ruxsat berdingiz, ${tag(a)} davom etmoqda`);setSt(a,"ishlayapti")}}
+ if(a.p>=100){say(a,"Tayyor!");emo(a,"ok");setSt(a,"kutmoqda");await check(a,text)}
+ a.task=null;a.p=0;panel();
+ if(a.queue.length){work(a,a.queue.shift());return}
+ const s=take(a,"coffee"),t2=++a.tok;if(s){s.by=a;if(await go(a,s,t2)){a.spot=s;setSt(a,"dam");say(a,"Bir piyola choy ichib kelay.")}else s.by=null}a.until=Date.now()+9000}
+async function check(a,text){const q=M.tekshiruvchi,rais=M.rais;const tok=++q.tok;q.until=Infinity;
+ await fly(a.x,a.y,q.x,q.y,a.c);say(q,`${a.n}, natijangni ko'ray-chi...`);await go(q,seat(q.i),tok);setSt(q,"ishlayapti");await sleep(2400);
+ say(q,"Tekshirdim: sifat joyida.");emo(q,"ok");setSt(q,"kutmoqda");await fly(q.x,q.y,rais.x,rais.y,a.c);say(rais,"Natija sizga yuborildi!");
+ log(`${tag(q)} qabul qildi, ${tag(rais)} natijani sizga yubordi: “${esc(text)}”`);q.until=Date.now()+5000}
+const CHAT=[["Telegram bot qilsak-chi?","Zo'r g'oya, mijozlar ko'p bo'ladi."],["Yangi skill chiqibdi, ko'rdingmi?","Avval Qo'riqchi tekshirsin."],["Prezentatsiyaga animatsiya qo'shsak?","Faqat me'yorida bo'lsin."],["Render 2 barobar tez bo'ldi!","Qanday qilding? O'rgat."],["Bugun nechta vazifa bajardik?","Jurnalga qarasang bo'ladi."],["O'zbekcha ovoz yaxshilandi.","Ha, endi \"Jarvis\"ni aniq eshitadi."],["Mushuk yana divanimni egalladi.","U bu ofisning haqiqiy boshlig'i."]];
+const COF=["Choy vaqti.","Qahva ichib olay.","Bir oz nafas rostlay."];
+async function idle(){if(paused)return;const now=Date.now();
+ const fr=AG.filter(a=>!a.task&&a.until<now&&a.id!=="rais");if(!fr.length)return;
+ const a=fr[Math.floor(Math.random()*fr.length)],r=Math.random(),tok=++a.tok;
+ if(r<.3&&fr.length>1){const b=fr.filter(x=>x!==a)[Math.floor(Math.random()*(fr.length-1))],tb=++b.tok;
+  const s1=take(a,"meet");if(!s1)return;s1.by=a;const s2=take(b,"meet");if(!s2){s1.by=null;return}s2.by=b;
+  a.until=b.until=Infinity;
+  const [o1,o2]=await Promise.all([go(a,s1,tok),go(b,s2,tb)]);if(!o1)s1.by=null;if(!o2)s2.by=null;if(!o1||!o2){a.until=b.until=0;return}
+  a.spot=s1;b.spot=s2;setSt(a,"gaplashyapti");setSt(b,"gaplashyapti");const c=CHAT[Math.floor(Math.random()*CHAT.length)];
+  emo(a,"bulb");say(a,c[0]);await sleep(2700);if(b.tok===tb)say(b,c[1]);log(`${tag(a)} va ${tag(b)} g'oya almashmoqda`);a.until=b.until=Date.now()+7000;}
+ else if(r<.55){const s=take(a,"coffee");if(!s)return;s.by=a;a.until=Infinity;if(await go(a,s,tok)){a.spot=s;setSt(a,"dam");say(a,COF[Math.floor(Math.random()*3)])}else s.by=null;a.until=Date.now()+9000}
+ else if(r<.75){const s=take(a,"couch");if(!s)return;s.by=a;a.until=Infinity;if(await go(a,s,tok)){a.spot=s;setSt(a,"uxlayapti");log(`${tag(a)} uzoq vazifa bo'lmagani uchun uxlab qoldi`)}else s.by=null;a.until=Date.now()+13000}
+ else{a.until=Infinity;if(await go(a,seat(a.i),tok))setSt(a,"kutmoqda");a.until=Date.now()+7000}}
+setInterval(idle,2600);
+const cat=document.createElement("div");cat.className="cat";
+cat.innerHTML=`<svg viewBox="0 0 38 26"><ellipse cx="19" cy="24.5" rx="13" ry="2" fill="#0003"/><g class="awake"><path class="tail" d="M6 12q-6-4-3-11" stroke="#e08a3c" stroke-width="3.2" fill="none" stroke-linecap="round"/><rect class="cl1" x="9" y="15" width="3.5" height="9" rx="1.7" fill="#d07a2c"/><rect class="cl2" x="24" y="15" width="3.5" height="9" rx="1.7" fill="#d07a2c"/><ellipse cx="18" cy="14" rx="12" ry="6.5" fill="#e08a3c"/><path d="M12 10h3M17 9h3M22 10h3" stroke="#c2671f" stroke-width="1.5"/><circle cx="30" cy="9" r="6" fill="#e08a3c"/><path d="M26 5l1-5 3.5 3.5M31 3.5l3.5-3.5 1 5" fill="#e08a3c"/><circle cx="32.5" cy="8.5" r="1" fill="#222"/><circle cx="35.5" cy="10.5" r=".9" fill="#e4572e"/></g><g class="slp"><ellipse cx="19" cy="18" rx="12" ry="6.5" fill="#e08a3c"/><path d="M8 20q11 6 22-2" stroke="#c2671f" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="27" cy="15" r="5" fill="#e08a3c"/><path d="M25 15h3" stroke="#222" stroke-width="1"/></g></svg><div class="bub" style="--c:#e08a3c;bottom:30px;left:19px"></div>`;
+world.insertBefore(cat,ovl);const C={x:300,y:330,tok:0};
+function cplace(x,y,t){const dx=x-C.x;if(dx<-1)cat.classList.add("flip");else if(dx>1)cat.classList.remove("flip");cat.style.transition=`left ${t}s linear,top ${t}s linear`;cat.style.left=(x-19)+"px";cat.style.top=(y-25)+"px";cat.style.zIndex=Math.round(Math.max(C.y,y));C.x=x;C.y=y}
+cplace(300,330,0);
+async function catLife(){if(paused)return;const r=Math.random();
+ if(r<.35){cat.classList.add("sl");return}
+ cat.classList.remove("sl");const x=40+Math.random()*920,y=236+Math.random()*180,t=Math.hypot(x-C.x,y-C.y)/70/speed;cat.classList.add("walk");cplace(x,y,RM?0:t);setTimeout(()=>cat.classList.remove("walk"),t*1000)}
+setInterval(catLife,5200);
+cat.addEventListener("click",()=>{const b=cat.querySelector(".bub");cat.classList.remove("sl");b.textContent="Miyov!";b.classList.add("show");setTimeout(()=>b.classList.remove("show"),1600)});
+const MODES=["avto","kun","kech","tun"],ML={avto:"Vaqt: avto",kun:"Vaqt: kunduz",kech:"Vaqt: kechqurun",tun:"Vaqt: tun"};let mode=0;
+function sky(){const h=new Date().getHours();let m=MODES[mode];if(m==="avto")m=h>=7&&h<17?"kun":h>=17&&h<20?"kech":"tun";
+ world.classList.toggle("night",m==="tun");world.classList.toggle("eve",m==="kech");
+ world.style.setProperty("--sky",m==="kun"?"linear-gradient(#6ec0ff,#d4f0ff)":m==="kech"?"linear-gradient(#ff7a50,#ffd08a)":"linear-gradient(#0a1230,#24345e)")}
+function clock(){const d=new Date(),s=d.getSeconds(),m=d.getMinutes()+s/60,h=d.getHours()%12+m/60;
+ const set=(id,deg)=>{const g=document.getElementById(id);if(g)g.setAttribute("transform",`rotate(${deg} 15 15)`)};set("hh",h*30);set("mm",m*6);set("ss",s*6)}
+setInterval(clock,1000);clock();sky();setInterval(sky,60000);
+function init(){const s=(a,k,n,st)=>{const p=spots[k][n];p.by=a;a.spot=p;a.inCab=null;a.pos=null;place(a,p.x,p.y);setSt(a,st)};AG.forEach(side);
+ s(M.rassom,"couch",0,"uxlayapti");s(M.tadqiqotchi,"meet",0,"gaplashyapti");s(M.qoriqchi,"meet",1,"gaplashyapti");s(M.jarvis,"coffee",1,"dam");M.qoriqchi.el.classList.add("flip");
+ AG.forEach(a=>a.until=Date.now()+6000);panel();
+ setTimeout(()=>{emo(M.tadqiqotchi,"bulb");say(M.tadqiqotchi,"Telegram bot qilsak-chi?")},700);setTimeout(()=>say(M.qoriqchi,"Avval xavfsizligini o'ylaylik."),3000);
+ setTimeout(()=>runTask("Choraklik hisobot uchun 8 slaydli prezentatsiya tayyorla"),1500);
+ setTimeout(()=>runTask("Shu reels uslubida yangi video montaj qil"),10000);}
+const TASKS=["8 slaydli prezentatsiya tayyorla","Shu reels uslubida video montaj qil","Mahsulot uchun 3 xil poster yarat","Yuklamalar papkasini tartibga sol","Eski fayllarni o'chir","Repolarimni ochiq kalitlar uchun tekshir","Raqobatchilar narxini tahlil qil"];
+document.getElementById("chips").innerHTML=TASKS.map(t=>`<button type="button">${t}</button>`).join("");
+document.getElementById("chips").addEventListener("click",e=>{if(e.target.tagName==="BUTTON")runTask(e.target.textContent)});
+document.getElementById("f").addEventListener("submit",e=>{e.preventDefault();const i=document.getElementById("task");if(i.value.trim()){runTask(i.value.trim());i.value=""}});
+document.getElementById("pause").onclick=e=>{paused=!paused;e.target.textContent=paused?"Davom ettirish":"Pauza"};
+document.getElementById("speed").onclick=e=>{speed=speed===1?2:1;e.target.textContent="Tezlik ×"+speed};
+document.getElementById("tm").onclick=e=>{mode=(mode+1)%4;e.target.textContent=ML[MODES[mode]];sky()};
+const ow=document.getElementById("ow"),sizer=document.getElementById("sizer");
+function fit(){const w=ow.clientWidth-16;const k=Math.max(.62,Math.min(1,w/W));world.style.transform=`scale(${k})`;sizer.style.width=W*k+"px";sizer.style.height=H*k+"px"}
+const ro=new ResizeObserver(fit);ro.observe(ow);fit();
+document.getElementById("team").innerHTML=AG.map(a=>`<article class="ac" id="a-${a.id}" style="--c:${a.c}"><header>${svgP(a.c,a.h)}<div><h3>${a.n}</h3><small>${a.r}</small></div></header><div class="lab">Vazifalari</div><ul>${a.does.map(d=>`<li>${d}</li>`).join("")}</ul><div class="lab">Skill va vositalar</div><div class="tools">${a.tools.map(t=>`<span>${t[0]}${t[1]?` <b>★ ${t[1]}</b>`:""}</span>`).join("")}</div><div class="lab">Natija</div><div>${a.out}</div><div class="lab">Cheklov</div><div>${a.lim}</div></article>`).join("");
+const ST=[["Kutmoqda","Vazifa yo'q, stol yonida","Stolda o'tiradi, ko'zlarini pirpiratadi, monitor o'chiq","agent.idle"],["O'ylayapti","Reja tuzyapti","Boshi ustida sakrovchi uch nuqta","task.planning"],["Ishlayapti","Vazifani bajaryapti","Qo'llari klaviaturada tez yuradi, ekranda kod oqadi, progress chizig'i","task.progress"],["Asabiy","Ma'lumot yetishmaydi yoki 2 urinish xato","Yuzi qizaradi, boshidan bug' chiqadi, boshqa agentning kabinetiga borib so'raydi","task.blocked"],["Ruxsat kutmoqda","Qaytarib bo'lmaydigan amal oldidan","Qo'lini ko'taradi, jurnalda \"Ha / Yo'q\" tugmalari, Telegramga xabar","task.needs_approval"],["Gaplashyapti","Maslahat yoki g'oya almashish","Yig'ilish stolida qo'l silkitib gapiradi, g'oya chirog'i yonadi","agent.chat"],["Dam olyapti","Vazifa tugagach 1–3 daqiqa","Qahvaxonada qo'lida bug'langan choy bilan turadi","agent.break"],["Uxlayapti","15+ daqiqa vazifa yo'q (resurs tejash)","Divanda boshini egib uxlaydi, \"z Z\" uchadi","agent.sleep"]];
+document.getElementById("states").innerHTML=ST.map(r=>`<tr><td data-l="Holat"><b>${r[0]}</b></td><td data-l="Qachon">${r[1]}</td><td data-l="Ko'rinishi">${r[2]}</td><td data-l="Hodisa"><code>${r[3]}</code></td></tr>`).join("");
+const SK=[];AG.forEach(a=>a.tools.forEach(t=>{if(t[1])SK.push([t[0],t[1],a.n,a.id])}));
+const WHY={"anthropics/skills":"docx, pptx, xlsx, pdf skill'lari","microsoft/markitdown":"Har qanday hujjatni o'qish","presenton/presenton":"Chiroyli prezentatsiya generatori","blader/humanizer":"Matnni tabiiy qilish","openai/openai-agents-python":"Agentlarni boshqarish","paperclipai/paperclip":"Agentlar kompaniyasi namunasi","NousResearch/hermes-agent":"O'rganuvchi agent, skill katalogi","browser-use/browser-use":"Brauzerda ishlash","mvanhorn/last30days-skill":"So'nggi 30 kun trendlari","artokun/comfyui-mcp":"Rasm va video generatsiya","GabrieleLozupone/kokon":"Rasmni so'z bilan tahrirlash","ai-boost/awesome-image-video-prompts":"Tayyor promptlar","OpenMontageInc/OpenMontage":"Video ishlab chiqarish quvurlari","remotion-dev/remotion":"Kod bilan video yasash","nexu-io/openmotion":"Namuna videodan motion grafika","krillinai/OpenCreator":"Dublyaj va tarjima","veedstudio/open-edit":"Subtitr va montaj","KyaniteLabs/kinocut":"FFmpeg MCP server","CursorTouch/Windows-MCP":"Windows'ni boshqarish","trycua/cua":"Computer use","mediar-ai/terminator":"Windows UI avtomatlashtirish","openai/whisper":"Nutqni matnga","gitleaks/gitleaks":"Kodga tushgan kalitlar","aquasecurity/trivy":"Zaif kutubxonalar","trufflesecurity/trufflehog":"Kalitlarni tekshirish","semgrep/semgrep":"Xavfli kod naqshlari","github/github-mcp-server":"GitHub bilan ishlash","Pantheon-Security/medusa":"Skill va hook'larni tekshirish"};
+document.getElementById("sk").innerHTML=SK.map(r=>`<tr><td data-l="Repo"><a href="https://github.com/${r[0]}">${r[0]}</a></td><td data-l="Yulduz" class="n">${r[1]}</td><td data-l="Kim"><span style="color:${M[r[3]].c};font-weight:700">${r[2]}</span></td><td data-l="Nima uchun">${WHY[r[0]]||""}</td></tr>`).join("");
+document.getElementById("insp").innerHTML=[["ringhyacinth/Star-Office-UI","7.6k"],["pixtuoid/pixtuoid","576"],["harishkotra/agent-office","426"],["W17ant/Claude-Office","399"],["Gaurav2693/ai-office","70"]].map(t=>`<span><a href="https://github.com/${t[0]}">${t[0]}</a> <b style="color:var(--acc)">★ ${t[1]}</b></span>`).join("");
+document.querySelectorAll("[data-copy]").forEach(b=>b.addEventListener("click",async()=>{try{await navigator.clipboard.writeText(document.getElementById(b.dataset.copy).textContent);b.textContent="Nusxa olindi"}catch(e){b.textContent="Qo'lda belgilang"}setTimeout(()=>b.textContent="Nusxa olish",1800)}));
+init();
+}
+</script>
+</body>
+</html>
