@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>AI Ofis</title>
+<link rel="icon" href="data:,">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;700;800&display=swap" rel="stylesheet">
 <style>
@@ -253,7 +254,7 @@ button:hover{filter:brightness(1.08)}
 <div class="stage">
 <div>
 <div class="ow" id="ow"><div id="sizer"><div class="world" id="world"></div></div></div>
-<p class="note">Namuna rejim: agentlar hali haqiqiy ishga ulanmagan.</p>
+<p class="note" id="mnote">Namuna rejim: agentlar hali haqiqiy ishga ulanmagan. Jonli rejim uchun serverni ishga tushiring (README).</p>
 </div>
 <div class="side">
 <div class="box"><h3>Vazifa berish</h3>
@@ -277,7 +278,7 @@ button:hover{filter:brightness(1.08)}
 <div class="pfigs"><div><b id="na">0</b><span>bajarilyapti</span></div><div><b id="nr">0</b><span>tayyor</span></div><div><b id="nt">0</b><span>jami</span></div></div></div>
 <div class="pcols">
 <div><h2>Bajarilyapti</h2><div class="plist" id="act"></div></div>
-<div><h2>Tayyor</h2><div class="plist" id="rdy"></div><p class="note">Hozircha natija namuna .md fayl sifatida yuklanadi; agentlar ulangach haqiqiy fayl bo'ladi.</p></div>
+<div><h2>Tayyor</h2><div class="plist" id="rdy"></div><p class="note" id="rnote">Hozircha natija namuna .md fayl sifatida yuklanadi; agentlar ulangach haqiqiy fayl bo'ladi.</p></div>
 </div>
 </div></section>
 </main>
@@ -443,7 +444,7 @@ async function fly(x1,y1,x2,y2,c){const t=document.createElement("div");t.classN
  t.style.transition=`left ${d/speed}s ease-in-out,top ${d/speed}s cubic-bezier(.3,-.6,.6,1)`;t.style.left=x2+"px";t.style.top=(y2-60)+"px";await sleep(d*1000+80);t.remove()}
 function prog(a,p){a.p=p;a.ov.querySelector(".pb i").style.width=p+"%";const r=document.getElementById("pr-"+a.id);if(r)r.style.width=p+"%"}
 const rows=document.getElementById("rows"),cnt=document.getElementById("cnt");
-function panel(){rows.innerHTML=AG.map(a=>`<div class="row"><span class="dot" style="background:${a.c}"></span><div><b>${a.n}</b><small>${a.task?esc(a.task):a.r}</small>${a.task?`<div style="height:4px;background:var(--line);border-radius:2px;margin-top:3px"><div id="pr-${a.id}" style="height:4px;border-radius:2px;background:${a.c};width:${a.p}%"></div></div>`:""}</div><span class="chip c-${a.st}">${SL[a.st]}</span></div>`).join("");
+function panel(){rows.innerHTML=AG.map(a=>`<div class="row"><span class="dot" style="background:${a.c}"></span><div><b>${a.n}</b><small>${a.task?esc(a.task):a.r}</small>${a.task?`<div style="height:4px;background:var(--line);border-radius:2px;margin-top:3px"><div id="pr-${a.id}" style="height:4px;border-radius:2px;background:${a.c};width:${a.p}%"></div></div>`:""}</div><span class="chip c-${a.st}">${LIVE&&!CONN.has(a.id)&&!a.task?"Ulanmagan":SL[a.st]}</span></div>`).join("");
  const n=s=>AG.filter(a=>a.st===s).length;
  cnt.innerHTML=`<span><b>${n("ishlayapti")+n("asabiy")+n("ruxsat")}</b> ishlayapti</span><span><b>${n("gaplashyapti")}</b> gaplashyapti</span><span><b>${n("dam")}</b> dam olyapti</span><span><b>${n("uxlayapti")}</b> uxlayapti</span>`}
 function log(){}
@@ -454,8 +455,8 @@ const pick=t=>(RT.find(r=>r[1].test(t))||["tadqiqotchi"])[0];
 const HELP={hujjatchi:["tadqiqotchi","Raqamlar qayerda?! Menga so'nggi hisobot kerak!","Mana, 3 ta manba bilan."],montajchi:["rassom","Bu kadrga fon yo'q-ku! Yordam ber!","Hozir chizib beraman."],rassom:["tadqiqotchi","Brendning ranglari qanaqa edi?!","Qizil va oq, logotip papkada."],jarvis:["qoriqchi","Bu faylni o'chirsam xavfsizmi?","Avval egasidan ruxsat so'ra!"],qoriqchi:["rais","Repoda ochiq kalit topdim! Nima qilay?","Darhol egasiga xabar ber, PR och."],tadqiqotchi:["hujjatchi","Topganlarimni qaysi formatda beray?!","Jadval qilib ber, raqamlari bilan."]};
 let PID=0;const PR=[];const DONE={};AG.forEach(a=>DONE[a.id]=0);
 try{JSON.parse(localStorage.getItem("aiofis-pr")||"[]").forEach(p=>{PR.push(p);PID=Math.max(PID,p.id);if(p.st==="tayyor"&&DONE[p.ag]!==undefined)DONE[p.ag]++})}catch(e){}
-function save(){try{localStorage.setItem("aiofis-pr",JSON.stringify(PR.filter(p=>p.st==="tayyor"||p.st==="bekor").slice(0,40)))}catch(e){}}
-async function runTask(text){
+function save(){if(LIVE)return;try{localStorage.setItem("aiofis-pr",JSON.stringify(PR.filter(p=>p.st==="tayyor"||p.st==="bekor").slice(0,40)))}catch(e){}}
+async function runTask(text){if(LIVE)return liveRun(text);
  const id=pick(text),a=M[id],rais=M.rais;
  const pr={id:++PID,text,ag:id,st:"navbatda",p:0,t0:Date.now(),note:""};PR.unshift(pr);renderPr();
  emo(rais,"bang");setSt(rais,"oylayapti");say(rais,"Qabul qildim! O'ylab ko'ray...");await sleep(1400);
@@ -492,14 +493,14 @@ function ask(a,pr){return new Promise(res=>{const d=document.createElement("div"
  const b=d.querySelectorAll("button");const fin=v=>{if(!d.isConnected)return;pr.res=null;d.remove();askEl.hidden=!askL.children.length;badge();res(v)};b[0].onclick=()=>fin(true);b[1].onclick=()=>fin(false);pr.res=fin;renderPr();
  askL.appendChild(d);askEl.hidden=false;badge()})}
 const FN={hujjatchi:"hujjat",tadqiqotchi:"tadqiqot",rassom:"rasm-tavsifi",montajchi:"video-reja",jarvis:"jarvis-hisobot",qoriqchi:"xavfsizlik-hisoboti"};
-const fname=p=>`${FN[p.ag]||"natija"}-${p.id}.md`;
+const fname=p=>p.file||`${FN[p.ag]||"natija"}-${p.id}.md`;
 const tm=t=>new Date(t).toTimeString().slice(0,5);
 function fileText(p){const a=M[p.ag];return `# ${p.text}\n\n- Bajaruvchi: ${a.n} (${a.r})\n- Tekshirdi: Tekshiruvchi\n- Boshlandi: ${new Date(p.t0).toLocaleString("uz-UZ")}\n- Tugadi: ${new Date(p.t1).toLocaleString("uz-UZ")}\n\nBu namuna fayl. Agentlar ulangandan keyin bu yerda haqiqiy natija bo'ladi: .pptx, .docx, .xlsx, .mp4, rasm yoki hisobot.\n`}
 const SLP={navbatda:"Navbatda",bajarilyapti:"Bajarilyapti",ruxsat:"Ruxsatingizni kutyapti",tekshiruvda:"Tekshiruvda",tayyor:"Tayyor",bekor:"Bekor qilindi"};
 const mini=a=>`<span class="mini">${sprite(a)}</span>`;
 function renderPr(){const act=PR.filter(p=>!["tayyor","bekor"].includes(p.st)),rdy=PR.filter(p=>["tayyor","bekor"].includes(p.st));
  document.getElementById("act").innerHTML=act.length?act.map(p=>{const a=M[p.ag];return `<div class="pj" style="--c:${a.c}">${mini(a)}<div><b>${esc(p.text)}</b><small>${a.n} · ${SLP[p.st]}${p.note?" · "+p.note:""}</small><div class="bar"><i style="width:${p.p}%"></i></div>${p.st==="ruxsat"&&p.res?`<div class="ctl" style="margin-top:10px"><button type="button" data-ok="${p.id}">Ha, ruxsat</button><button type="button" class="gh" data-no="${p.id}">Yo'q</button></div>`:""}</div><span class="pc">${p.p}%</span></div>`}).join(""):`<p class="empty">Hozir bajarilayotgan vazifa yo'q. <a href="#ofis">Ofisda vazifa bering</a>.</p>`;
- document.getElementById("rdy").innerHTML=rdy.length?rdy.map(p=>{const a=M[p.ag],ok=p.st==="tayyor";return `<div class="pj rd${ok?"":" off"}" style="--c:${a.c}">${mini(a)}<div><b>${esc(p.text)}</b><small>${a.n} · ${ok?tm(p.t1)+" · "+fname(p):"Bekor qilindi, hech narsa o'zgarmadi"}</small></div>${ok?`<button type="button" data-dl="${p.id}">Yuklab olish</button>`:""}</div>`}).join(""):`<p class="empty">Hali tayyor loyiha yo'q.</p>`;
+ document.getElementById("rdy").innerHTML=rdy.length?rdy.map(p=>{const a=M[p.ag],ok=p.st==="tayyor";return `<div class="pj rd${ok?"":" off"}" style="--c:${a.c}">${mini(a)}<div><b>${esc(p.text)}</b><small>${a.n} · ${ok?tm(p.t1)+" · "+fname(p):esc(p.note||"Bekor qilindi, hech narsa o'zgarmadi")}</small></div>${ok?`<button type="button" data-dl="${p.id}">Yuklab olish</button>`:""}</div>`}).join(""):`<p class="empty">Hali tayyor loyiha yo'q.</p>`;
  document.getElementById("na").textContent=act.length;document.getElementById("nr").textContent=rdy.filter(p=>p.st==="tayyor").length;
  document.getElementById("nt").textContent=PR.length;badge()}
 function badge(){const n=PR.filter(p=>!["tayyor","bekor"].includes(p.st)).length;const b=document.getElementById("nb");b.textContent=n;b.hidden=!n;
@@ -507,6 +508,7 @@ function badge(){const n=PR.filter(p=>!["tayyor","bekor"].includes(p.st)).length
 let DL=null;try{if(window.claude&&window.claude.use)window.claude.use("downloads").then(d=>{DL=d}).catch(()=>{})}catch(e){}
 document.getElementById("act").addEventListener("click",e=>{const d=e.target.dataset||{};const id=d.ok||d.no;if(!id)return;const p=PR.find(x=>x.id==id);if(p&&p.res)p.res(!!d.ok)});
 document.getElementById("rdy").addEventListener("click",async e=>{const id=e.target.dataset&&e.target.dataset.dl;if(!id)return;const p=PR.find(x=>x.id==id),b=e.target;
+ if(p.url){const l=document.createElement("a");l.href=p.url;l.download=p.file;document.body.appendChild(l);l.click();l.remove();return}
  if(DL){try{await DL.save({filename:fname(p),data:fileText(p)});b.textContent="Saqlandi"}catch(err){b.textContent=err&&err.code==="declined"?"Bekor qilindi":"Yuklab bo'lmadi"}}
  else{try{const u=URL.createObjectURL(new Blob([fileText(p)],{type:"text/markdown"}));const l=document.createElement("a");l.href=u;l.download=fname(p);document.body.appendChild(l);l.click();l.remove();setTimeout(()=>URL.revokeObjectURL(u),2000);b.textContent="Yuklandi"}catch(err){b.textContent="Yuklab bo'lmadi"}}
  setTimeout(()=>b.textContent="Yuklab olish",2200)});
@@ -517,6 +519,48 @@ function roster(){document.getElementById("staff").innerHTML=AG.map(a=>{const f=
 function view(){const v=location.hash==="#loyihalar"?"loyihalar":"ofis";document.getElementById("v-ofis").hidden=v!=="ofis";document.getElementById("v-loyihalar").hidden=v!=="loyihalar";
  document.querySelectorAll(".tabs a").forEach(t=>t.classList.toggle("cur",t.getAttribute("href")==="#"+v));if(v==="ofis")requestAnimationFrame(()=>fit&&fit())}
 window.addEventListener("hashchange",()=>{view();scrollTo(0,0)});
+let LIVE=null;const CONN=new Set(["rais","hujjatchi","tekshiruvchi"]);
+async function detectLive(){if(location.protocol==="file:"||!location.host)return;try{const r=await fetch("/api/status",{cache:"no-store"});if(!r.ok)return;const s=await r.json();if(!s.live)return;
+ LIVE=s;PR.length=0;AG.forEach(a=>DONE[a.id]=0);(s.connected||[]).forEach(x=>CONN.add(x));
+ document.querySelector(".live span").textContent=s.ai?"Jonli rejim · AI ulangan":"Jonli rejim · AI kalitsiz";
+ document.getElementById("mnote").textContent=s.ai?`Jonli rejim: Rais, Hujjatchi va Tekshiruvchi haqiqiy ishlaydi (${s.model}). Qolgan agentlar keyingi bosqichlarda ulanadi.`:"Jonli rejim, lekin AI kaliti yo'q: Hujjatchi shablon fayl yasaydi. .env fayliga ANTHROPIC_API_KEY yozing va serverni qayta ishga tushiring.";
+ document.getElementById("rnote").hidden=true;renderPr();roster();panel();connect()}catch(e){}}
+function connect(){const ws=new WebSocket((location.protocol==="https:"?"wss://":"ws://")+location.host+"/ws");
+ ws.onmessage=e=>{const ev=JSON.parse(e.data);if(ev.type==="snapshot")ev.tasks.slice().reverse().forEach(t=>onTask(t,true));else if(ev.type==="task")onTask(ev.task,false)};
+ ws.onclose=()=>{document.querySelector(".live span").textContent="Server bilan aloqa uzildi, qayta ulanyapti...";setTimeout(()=>{connect();document.querySelector(".live span").textContent=LIVE.ai?"Jonli rejim · AI ulangan":"Jonli rejim · AI kalitsiz"},2500)}}
+async function liveRun(text){const rais=M.rais;emo(rais,"bang");setSt(rais,"oylayapti");say(rais,"Qabul qildim! O'ylab ko'ray...");
+ try{const r=await fetch("/api/tasks",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({text})});if(!r.ok)throw 0}catch(e){say(rais,"Server bilan aloqa yo'q!",3000,true);setSt(rais,"kutmoqda")}}
+function onTask(t,snap){let p=PR.find(x=>x.id===t.id);const prev=p?{st:p.st,ag:p.ag,hn:p.help&&p.help.n}:null;
+ if(!p){p={id:t.id};PR.push(p)}
+ Object.assign(p,{text:t.text,ag:t.ag||"rais",st:t.st,p:t.p,note:t.note||"",t0:t.t0,t1:t.t1,file:t.file,url:t.file?"/api/files/"+encodeURIComponent(t.file):null,help:t.help});
+ PR.sort((a,b)=>b.t0-a.t0);
+ if(p.st==="tayyor"&&(!prev||prev.st!=="tayyor")&&DONE[p.ag]!==undefined)DONE[p.ag]++;
+ if(!snap&&prev)animate(p,prev);
+ if(p.st==="ruxsat"&&!p.res)liveAsk(M[p.ag],p,snap);
+ renderPr();if(p.st==="tayyor")roster()}
+function animate(p,prev){const a=M[p.ag],rais=M.rais;
+ if(prev.ag==="rais"&&p.ag!=="rais"){setSt(rais,"kutmoqda");say(rais,`Bu ${a.n}ga.`);fly(rais.x,rais.y,a.x,a.y,a.c)}
+ if(prev.st!==p.st){
+  if(p.st==="bekor"){if(a.task===p.text){a.task=null;a.p=0}setSt(a,a.st==="ruxsat"||a.st==="ishlayapti"||a.st==="asabiy"?"kutmoqda":a.st);
+   const off=!CONN.has(p.ag);setTimeout(()=>{say(a,p.note||"Bekor qilindi",4200,off);if(off)emo(a,"q")},off?1600:0)}
+  if(p.st==="bajarilyapti"&&prev.st!=="tekshiruvda"&&prev.st!=="ruxsat")liveStart(a,p);
+  if(p.st==="bajarilyapti"&&prev.st==="ruxsat")setSt(a,"ishlayapti");
+  if(p.st==="tekshiruvda"){say(a,"Tayyor, tekshirib ko'r!");emo(a,"ok");liveCheck(a)}
+  if(p.st==="tayyor")liveDone(a,p)}
+ if(p.st==="bajarilyapti"||p.st==="tekshiruvda")prog(a,p.p);
+ if(p.help&&p.help.n!==prev.hn)liveHelp(a,p.help)}
+async function liveStart(a,p){const tok=++a.tok;a.task=p.text;a.until=Infinity;emo(a,"bang");say(a,a.st==="uxlayapti"?"Uyg'ondim! Ketdim!":"Qabul qildim!");
+ if(await go(a,seat(a.i),tok)&&a.tok===tok&&a.task)setSt(a,a.st==="ruxsat"?"ruxsat":"ishlayapti")}
+async function liveAsk(a,p,snap){if(!snap){await liveStart(a,p)}setSt(a,"ruxsat");say(a,"Bu amal uchun sizning ruxsatingiz kerak.",4000);
+ const ok=await ask(a,p);try{await fetch(`/api/tasks/${p.id}/approve`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({ok})})}catch(e){}}
+async function liveHelp(a,h){const q=M[h.to]||M.tekshiruvchi,tok=a.tok;setSt(a,"asabiy");emo(a,"q",2200);say(a,h.q,3000,true);await sleep(1000);
+ const dest=q.inCab!==null&&q.pos==="seat"?aisle(q.inCab):P(q.x+46,q.y,null,null);if(!await go(a,dest,tok))return;say(q,h.a,3800);await sleep(3000);
+ say(a,"Tushundim, tuzataman!");setSt(a,"ishlayapti");await go(a,seat(a.i),tok)}
+async function liveCheck(a){const q=M.tekshiruvchi,tok=++q.tok;q.until=Infinity;fly(a.x,a.y,q.x,q.y,a.c);say(q,`${a.n}, natijangni ko'ray-chi...`);if(await go(q,seat(q.i),tok))setSt(q,"ishlayapti")}
+function liveDone(a,p){const q=M.tekshiruvchi,rais=M.rais,warn=p.note.startsWith("Ogohlantirish");
+ setSt(q,"kutmoqda");say(q,warn?p.note:"Tekshirdim: sifat joyida.",3500,warn);emo(q,warn?"q":"ok");q.until=Date.now()+5000;
+ fly(q.x,q.y,rais.x,rais.y,a.c).then(()=>say(rais,"Natija tayyor!"));toast(p);
+ a.task=null;a.p=0;setSt(a,"kutmoqda");a.until=Date.now()+4000;panel()}
 const CHAT=[["Telegram bot qilsak-chi?","Zo'r g'oya, mijozlar ko'p bo'ladi."],["Yangi skill chiqibdi, ko'rdingmi?","Avval Qo'riqchi tekshirsin."],["Prezentatsiyaga animatsiya qo'shsak?","Faqat me'yorida bo'lsin."],["Render 2 barobar tez bo'ldi!","Qanday qilding? O'rgat."],["Bugun nechta vazifa bajardik?","Jurnalga qarasang bo'ladi."],["O'zbekcha ovoz yaxshilandi.","Ha, endi \"Jarvis\"ni aniq eshitadi."],["Mushuk yana divanimni egalladi.","U bu ofisning haqiqiy boshlig'i."]];
 const COF=["Choy vaqti.","Qahva ichib olay.","Bir oz nafas rostlay."];
 async function idle(){if(paused)return;const now=Date.now();
@@ -553,9 +597,8 @@ function init(){const s=(a,k,n,st)=>{const p=spots[k][n];p.by=a;a.spot=p;a.inCab
  s(M.rassom,"couch",0,"uxlayapti");s(M.tadqiqotchi,"meet",0,"gaplashyapti");s(M.qoriqchi,"meet",1,"gaplashyapti");s(M.jarvis,"coffee",1,"dam");M.qoriqchi.el.classList.add("flip");
  AG.forEach(a=>a.until=Date.now()+6000);panel();
  setTimeout(()=>{emo(M.tadqiqotchi,"bulb");say(M.tadqiqotchi,"Telegram bot qilsak-chi?")},700);setTimeout(()=>say(M.qoriqchi,"Avval xavfsizligini o'ylaylik."),3000);
- setTimeout(()=>runTask("Choraklik hisobot uchun 8 slaydli prezentatsiya tayyorla"),1500);
- setTimeout(()=>runTask("Shu reels uslubida yangi video montaj qil"),10000);}
-const TASKS=["8 slaydli prezentatsiya tayyorla","Shu reels uslubida video montaj qil","Mahsulot uchun 3 xil poster yarat","Yuklamalar papkasini tartibga sol","Eski fayllarni o'chir","Repolarimni ochiq kalitlar uchun tekshir","Raqobatchilar narxini tahlil qil"];
+ detectLive().then(()=>{if(LIVE)return;setTimeout(()=>runTask("Choraklik hisobot uchun 8 slaydli prezentatsiya tayyorla"),1500);setTimeout(()=>runTask("Shu reels uslubida yangi video montaj qil"),10000)});}
+const TASKS=["8 slaydli prezentatsiya tayyorla","Oylik oila byudjeti jadvalini tuz","Rahbarga ta'til uchun ariza yoz","Shu reels uslubida video montaj qil","Mahsulot uchun 3 xil poster yarat","Eski fayllarni o'chir","Repolarimni ochiq kalitlar uchun tekshir"];
 document.getElementById("chips").innerHTML=TASKS.map(t=>`<button type="button">${t}</button>`).join("");
 document.getElementById("chips").addEventListener("click",e=>{if(e.target.tagName==="BUTTON")runTask(e.target.textContent)});
 document.getElementById("f").addEventListener("submit",e=>{e.preventDefault();const i=document.getElementById("task");if(i.value.trim()){runTask(i.value.trim());i.value=""}});
