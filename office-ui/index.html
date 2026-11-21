@@ -508,7 +508,7 @@ let DL=null;try{if(window.claude&&window.claude.use)window.claude.use("downloads
 document.getElementById("act").addEventListener("click",e=>{const d=e.target.dataset||{};const id=d.ok||d.no;if(!id)return;const p=PR.find(x=>x.id==id);if(p&&p.res)p.res(!!d.ok)});
 document.getElementById("rdy").addEventListener("click",async e=>{const id=e.target.dataset&&e.target.dataset.dl;if(!id)return;const p=PR.find(x=>x.id==id),b=e.target;
  if(DL){try{await DL.save({filename:fname(p),data:fileText(p)});b.textContent="Saqlandi"}catch(err){b.textContent=err&&err.code==="declined"?"Bekor qilindi":"Yuklab bo'lmadi"}}
- else{try{await navigator.clipboard.writeText(fileText(p));b.textContent="Matn nusxalandi"}catch(err){b.textContent="Yuklab bo'lmadi"}}
+ else{try{const u=URL.createObjectURL(new Blob([fileText(p)],{type:"text/markdown"}));const l=document.createElement("a");l.href=u;l.download=fname(p);document.body.appendChild(l);l.click();l.remove();setTimeout(()=>URL.revokeObjectURL(u),2000);b.textContent="Yuklandi"}catch(err){b.textContent="Yuklab bo'lmadi"}}
  setTimeout(()=>b.textContent="Yuklab olish",2200)});
 const toastEl=document.getElementById("toast");
 function toast(p){toastEl.innerHTML=`<b>Tayyor:</b> ${esc(p.text)} <a href="#loyihalar">Loyihalarda ko'rish</a>`;toastEl.classList.add("show");clearTimeout(toastEl.t);toastEl.t=setTimeout(()=>toastEl.classList.remove("show"),5000)}
